@@ -8,6 +8,11 @@ import UIKit
 
 final class CategoryAndTimetableView: UIView {
     
+    var onTimetableTap: (() -> Void)?
+    
+    let categoryRow = ItemRowView(title: "Категория")
+    let timetableRow = ItemRowView(title: "Расписание")
+    
     private let stackView: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
@@ -30,6 +35,7 @@ final class CategoryAndTimetableView: UIView {
         super.init(frame: frame)
         
         setupView()
+        setupActions()
     }
     
     required init?(coder: NSCoder) {
@@ -37,11 +43,8 @@ final class CategoryAndTimetableView: UIView {
     }
     
     private func setupView() {
-        let category = createItemRow(title: "Категория")
-        let timetable = createItemRow(title: "Расписание")
-        
-        stackView.addArrangedSubview(category)
-        stackView.addArrangedSubview(timetable)
+        stackView.addArrangedSubview(categoryRow)
+        stackView.addArrangedSubview(timetableRow)
         
         addSubview(stackView)
         addSubview(separator)
@@ -59,14 +62,27 @@ final class CategoryAndTimetableView: UIView {
         ])
     }
     
+    private func setupActions() {
+        let timetableGesture = UITapGestureRecognizer(target: self, action: #selector(timetableRowTapped))
+        timetableRow.addGestureRecognizer(timetableGesture)
+        timetableRow.isUserInteractionEnabled = true
+    }
+    
     private func createItemRow(title: String) -> UIView {
         let row = UIView()
+        row.translatesAutoresizingMaskIntoConstraints = false
         
-        let label = UILabel()
-        label.text = title
-        label.font = .systemFont(ofSize: 17, weight: .regular)
-        label.textColor = .label
-        label.translatesAutoresizingMaskIntoConstraints = false
+        let titleLabel = UILabel()
+        titleLabel.text = title
+        titleLabel.font = .systemFont(ofSize: 17, weight: .regular)
+        titleLabel.textColor = UIColor(resource: .black)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        let descriptionLabel = UILabel()
+        descriptionLabel.text = title
+        descriptionLabel.font = .systemFont(ofSize: 17, weight: .regular)
+        descriptionLabel.textColor = UIColor(resource: .gray)
+        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let chevron = UIImageView()
         chevron.image = UIImage(resource: .chevronIcon)
@@ -74,19 +90,27 @@ final class CategoryAndTimetableView: UIView {
         chevron.contentMode = .scaleAspectFit
         chevron.translatesAutoresizingMaskIntoConstraints = false
         
-        row.addSubview(label)
+        row.addSubview(titleLabel)
+        row.addSubview(descriptionLabel)
         row.addSubview(chevron)
         
         NSLayoutConstraint.activate([
             row.heightAnchor.constraint(equalToConstant: 75),
             
-            label.leadingAnchor.constraint(equalTo: row.leadingAnchor, constant: 16),
-            label.centerYAnchor.constraint(equalTo: row.centerYAnchor),
+            titleLabel.topAnchor.constraint(equalTo: row.topAnchor, constant: 16),
+            titleLabel.leadingAnchor.constraint(equalTo: row.leadingAnchor, constant: 16),
+            
+            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 2),
+            descriptionLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             
             chevron.trailingAnchor.constraint(equalTo: row.trailingAnchor, constant: -16),
             chevron.centerYAnchor.constraint(equalTo: row.centerYAnchor),
         ])
         
         return row
+    }
+    
+    @objc private func timetableRowTapped() {
+        onTimetableTap?()
     }
 }

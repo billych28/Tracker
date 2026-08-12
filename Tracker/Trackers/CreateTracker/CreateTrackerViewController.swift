@@ -13,20 +13,10 @@ final class CreateTrackerViewController: UIViewController {
     
     private let trackerParamItems = ["Категория", "Расписание"]
     
-    private let textField: UITextField = {
-        let textField = UITextField()
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: textField.frame.height))
-
-        textField.leftView = paddingView
-        textField.leftViewMode = .always
-        textField.backgroundColor = UIColor(resource: .background)
-        textField.clearButtonMode = .whileEditing
-        textField.placeholder = "Введите название трекера"
-        textField.borderStyle = .none
-        textField.layer.cornerRadius = 16
-        textField.clipsToBounds = true
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        return textField
+    private let textField: TextFieldView = {
+        let textFieldView = TextFieldView(frame: .zero, placeholder: "Введите название трекера", limit: 38)
+        textFieldView.translatesAutoresizingMaskIntoConstraints = false
+        return textFieldView
     }()
     
     private let parameterSectionView: CategoryAndTimetableView = {
@@ -70,6 +60,8 @@ final class CreateTrackerViewController: UIViewController {
         return button
     }()
     
+    private var selectedWeekdays: [Weekday] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -87,6 +79,15 @@ final class CreateTrackerViewController: UIViewController {
         view.addSubview(textField)
         view.addSubview(parameterSectionView)
         view.addSubview(buttonsStackView)
+        
+        parameterSectionView.onTimetableTap = { [weak self] in
+            guard let self else { return }
+            
+            let timetableVC = TimetableViewController()
+            timetableVC.delegate = self
+            
+            present(timetableVC, animated: true)
+        }
         
         buttonsStackView.addArrangedSubview(cancelButton)
         buttonsStackView.addArrangedSubview(submitButton)
@@ -115,10 +116,21 @@ final class CreateTrackerViewController: UIViewController {
         }
         let submitAction = UIAction { [weak self] _ in
             guard let self else { return }
-            delegate?.createTrackerTap(title: textField.text ?? "")
+            
+            let title = textField.textField.text ?? ""
+            delegate?.didCreateTracker(title: title, weekdays: selectedWeekdays)
             dismiss(animated: true)
         }
         cancelButton.addAction(cancelAction, for: .touchUpInside)
         submitButton.addAction(submitAction, for: .touchUpInside)
+    }
+}
+
+// MARK: - TimetableViewControllerDelegate
+extension CreateTrackerViewController: TimetableViewControllerDelegate {
+    func dateSelected(_ picker: TimetableViewController, didSelectWeekdays weekdays: [Weekday]) {
+        selectedWeekdays = weekdays
+        let timetableDescription = selectedWeekdays.formatWeekdays()
+        parameterSectionView.timetableRow.updateDescription(timetableDescription)
     }
 }

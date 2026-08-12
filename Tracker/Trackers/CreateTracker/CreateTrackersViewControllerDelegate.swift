@@ -6,5 +6,5 @@
 //
 
 protocol CreateTrackersViewControllerDelegate: AnyObject {
-    func createTrackerTap(title: String)
+    func didCreateTracker(title: String, weekdays: [Weekday])
 }

@@ -178,8 +178,8 @@ final class TrackersViewController: UIViewController, UISearchResultsUpdating {
 
 // MARK: - CreateTrackerViewControllerDelegate
 extension TrackersViewController: CreateTrackersViewControllerDelegate {
-    func createTrackerTap(title: String) {
-        let createdTracker = Tracker(id: UUID().uuidString, name: title, emoji: "👀", timetable: [.monday, .friday])
+    func didCreateTracker(title: String, weekdays: [Weekday]) {
+        let createdTracker = Tracker(id: UUID().uuidString, name: title, emoji: "👀", timetable: weekdays)
         addTracker(tracker: createdTracker)
     }
 }
