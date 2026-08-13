@@ -73,6 +73,7 @@ final class CreateTrackerViewController: UIViewController {
     private func setupScreen() {
         title = "Новая привычка"
         view.backgroundColor = .systemBackground
+        parameterSectionView.categoryRow.updateDescription("iOS-разработка")
     }
     
     private func setupUI() {
@@ -118,12 +119,25 @@ final class CreateTrackerViewController: UIViewController {
         let submitAction = UIAction { [weak self] _ in
             guard let self else { return }
             
-            let title = textField.textField.text ?? ""
+            guard validateTextField(), let title = textField.textField.text?.trimmingCharacters(in: .whitespacesAndNewlines) else {
+                return
+            }
+            
             delegate?.didCreateTracker(title: title, weekdays: selectedWeekdays)
             dismiss(animated: true)
         }
         cancelButton.addAction(cancelAction, for: .touchUpInside)
         submitButton.addAction(submitAction, for: .touchUpInside)
+    }
+    
+    private func validateTextField() -> Bool {
+        guard let text = textField.textField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !text.isEmpty else {
+            textField.updateErrorLabel(description: "Заполните поле", isHidden: false)
+            return false
+        }
+        
+        textField.updateErrorLabel(description: "", isHidden: true)
+        return true
     }
 }
 

@@ -94,7 +94,6 @@ final class TrackersViewController: UIViewController, UISearchResultsUpdating {
         let createTrackerVC = CreateTrackerViewController()
         createTrackerVC.delegate = self
         let navController = UINavigationController(rootViewController: createTrackerVC)
-        createTrackerVC.modalPresentationStyle = .pageSheet
         present(navController, animated: true)
     }
     

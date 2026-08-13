@@ -43,6 +43,11 @@ final class TextFieldView: UIView {
         fatalError("init(coder:) is not implemented")
     }
     
+    func updateErrorLabel(description: String, isHidden: Bool) {
+        errorLabel.text = description
+        errorLabel.isHidden = isHidden
+    }
+    
     private func setupViews(placeholder: String) {
         backgroundColor = .systemBackground
         textField.delegate = self
@@ -73,15 +78,15 @@ extension TextFieldView: UITextFieldDelegate {
         let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
         
         let isWithinLimit = updatedText.count <= maxLimit
-        errorLabel.isHidden = isWithinLimit
-        errorLabel.text = isWithinLimit ? "" : "Ограничение \(maxLimit) символов"
+        let errorDescription = isWithinLimit ? "" : "Ограничение \(maxLimit) символов"
+        
+        updateErrorLabel(description: errorDescription, isHidden: isWithinLimit)
         
         return isWithinLimit
     }
     
     func textFieldShouldClear(_ textField: UITextField) -> Bool {
-        errorLabel.isHidden = true
-        errorLabel.text = ""
+        updateErrorLabel(description: "", isHidden: true)
         return true
     }
 }

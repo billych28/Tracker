@@ -33,5 +33,17 @@ final class MainTabBarController: UITabBarController {
         )
         
         self.viewControllers = [nav1, nav2]
+        
+        let appearance = UITabBarAppearance()
+                
+        // 1. Выберите тип фона (например, стандартный непрозрачный)
+        appearance.configureWithOpaqueBackground()
+                
+        // 2. Задайте цвет линии-разделителя сверху
+        appearance.shadowColor = UIColor.gray
+                
+        // 3. Примените внешний вид к таббару
+        tabBar.standardAppearance = appearance
+        tabBar.scrollEdgeAppearance = appearance
     }
 }
