@@ -19,7 +19,7 @@ final class ItemRowView: UIView {
     private let descriptionLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 17, weight: .regular)
-        label.textColor = UIColor(resource: .gray)
+        label.textColor = UIColor(resource: .YPColors.gray)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

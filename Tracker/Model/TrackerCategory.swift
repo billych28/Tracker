@@ -7,5 +7,9 @@
 
 struct TrackerCategory {
     let title: String
-    var trackers: [Tracker]
+    let trackers: [Tracker]
+    
+    func addNewTracker(_ newTracker: Tracker) -> TrackerCategory {
+        return TrackerCategory(title: self.title, trackers: self.trackers + [newTracker])
+    }
 }

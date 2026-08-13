@@ -19,7 +19,7 @@ final class TimetableViewController: UIViewController {
     private var selectedWeekdays: Set<Weekday> = []
     private let tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .insetGrouped)
-        tableView.backgroundColor = UIColor(resource: .background)
+        tableView.backgroundColor = UIColor(resource: .YPColors.background)
         tableView.isScrollEnabled = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
@@ -43,6 +43,7 @@ final class TimetableViewController: UIViewController {
     }
     
     private func setupUI() {
+        title = "Расписание"
         view.backgroundColor = .systemBackground
         
         tableView.register(WeekdayCell.self, forCellReuseIdentifier: TimetableViewControllerConstants.weekdayCellIdentifier)

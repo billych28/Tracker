@@ -34,7 +34,7 @@ final class TrackersViewController: UIViewController, UISearchResultsUpdating {
         return view
     }()
     private var categories: [TrackerCategory] = [
-        TrackerCategory(title: "iOS-разработка", trackers: [Tracker(id: "1", name: "Выполнить ДЗ", emoji: "😎", timetable: [.monday, .friday])])
+        TrackerCategory(title: "iOS-разработка", trackers: [Tracker(name: "Выполнить ДЗ", emoji: "😎", colorName: .green, timetable: [.monday, .friday])])
     ]
     
     // MARK: - Lifecycle
@@ -101,6 +101,7 @@ final class TrackersViewController: UIViewController, UISearchResultsUpdating {
     private func setupDatePicker() {
         datePicker.datePickerMode = .date
         datePicker.preferredDatePickerStyle = .compact
+        datePicker.maximumDate = Date()
         
         let changeDateAction = UIAction { [weak self] action in
             guard let self else { return }
@@ -171,7 +172,7 @@ final class TrackersViewController: UIViewController, UISearchResultsUpdating {
     }
     
     private func addTracker(tracker: Tracker) {
-        categories[0].trackers.append(tracker)
+        categories[0] = categories[0].addNewTracker(tracker)
         filterTrackersDyDate()
     }
 }
@@ -179,7 +180,7 @@ final class TrackersViewController: UIViewController, UISearchResultsUpdating {
 // MARK: - CreateTrackerViewControllerDelegate
 extension TrackersViewController: CreateTrackersViewControllerDelegate {
     func didCreateTracker(title: String, weekdays: [Weekday]) {
-        let createdTracker = Tracker(id: UUID().uuidString, name: title, emoji: "👀", timetable: weekdays)
+        let createdTracker = Tracker(name: title, emoji: "👀", colorName: .red, timetable: weekdays)
         addTracker(tracker: createdTracker)
     }
 }

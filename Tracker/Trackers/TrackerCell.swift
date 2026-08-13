@@ -13,7 +13,6 @@ final class TrackerCell: UICollectionViewCell {
     
     let containerView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(resource: .green)
         view.layer.cornerRadius = 16
         view.layer.masksToBounds = true
         view.layer.borderWidth = 1
@@ -55,11 +54,12 @@ final class TrackerCell: UICollectionViewCell {
         return label
     }()
     
+    private var cellBackgroundColor: UIColor = .clear
+    
     let completeButton: UIButton = {
         var configuration = UIButton.Configuration.filled()
         let symbolConfig = UIImage.SymbolConfiguration(pointSize: 12)
         
-        configuration.baseBackgroundColor = UIColor(resource: .green)
         configuration.background.cornerRadius = 16
         configuration.imageColorTransformer = UIConfigurationColorTransformer { _ in
             return .white
@@ -83,16 +83,26 @@ final class TrackerCell: UICollectionViewCell {
         setupCompleteButton()
     }
     
+    func setBackgroundColor(with color: UIColor) {
+        cellBackgroundColor = color
+        containerView.backgroundColor = color
+        
+        if var config = completeButton.configuration {
+            config.background.backgroundColor = color
+            completeButton.configuration = config
+        }
+    }
+    
     func setIsCompleted(with count: Int, isCompleted: Bool) {
         guard var config = completeButton.configuration else { return }
         countLabel.text = "\(count) дней"
         
         if isCompleted {
             completeButton.setImage(UIImage(resource: .doneIcon), for: .normal)
-            config.background.backgroundColor = UIColor(resource: .green).withAlphaComponent(0.3)
+            config.background.backgroundColor = cellBackgroundColor.withAlphaComponent(0.3)
         } else {
             completeButton.setImage(UIImage(systemName: "plus"), for: .normal)
-            config.background.backgroundColor = UIColor(resource: .green)
+            config.background.backgroundColor = cellBackgroundColor.withAlphaComponent(1)
         }
         
         completeButton.configuration = config

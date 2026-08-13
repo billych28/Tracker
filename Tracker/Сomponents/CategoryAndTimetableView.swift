@@ -17,7 +17,7 @@ final class CategoryAndTimetableView: UIView {
         let stack = UIStackView()
         stack.axis = .vertical
         stack.distribution = .fillEqually
-        stack.backgroundColor = UIColor(resource: .background)
+        stack.backgroundColor = UIColor(resource: .YPColors.background)
         stack.layer.cornerRadius = 16
         stack.clipsToBounds = true
         stack.translatesAutoresizingMaskIntoConstraints = false
@@ -81,7 +81,7 @@ final class CategoryAndTimetableView: UIView {
         let descriptionLabel = UILabel()
         descriptionLabel.text = title
         descriptionLabel.font = .systemFont(ofSize: 17, weight: .regular)
-        descriptionLabel.textColor = UIColor(resource: .gray)
+        descriptionLabel.textColor = UIColor(resource: .YPColors.gray)
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let chevron = UIImageView()

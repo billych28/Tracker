@@ -49,6 +49,7 @@ extension TrackersViewController: UICollectionViewDataSource {
         cell.delegate = self
         cell.emojiLabel.text = tracker.emoji
         cell.titleLabel.text = tracker.name
+        cell.setBackgroundColor(with: tracker.colorName.uiColor)
         cell.setIsCompleted(with: totalCompletedDays, isCompleted: isCompletedToday)
         
         return cell

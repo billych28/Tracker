@@ -37,9 +37,9 @@ final class CreateTrackerViewController: UIViewController {
     private let cancelButton: UIButton = {
         var config = UIButton.Configuration.bordered()
         config.title = "Отменить"
-        config.baseForegroundColor = UIColor(resource: .red)
+        config.baseForegroundColor = UIColor(resource: .YPColors.red)
         config.baseBackgroundColor = .clear
-        config.background.strokeColor = UIColor(resource: .red)
+        config.background.strokeColor = UIColor(resource: .YPColors.red)
         config.background.strokeWidth = 1.0
         config.background.cornerRadius = 16
         
@@ -52,7 +52,7 @@ final class CreateTrackerViewController: UIViewController {
         var config = UIButton.Configuration.filled()
         config.title = "Создать"
         config.baseForegroundColor = .white
-        config.baseBackgroundColor = UIColor(resource: .gray)
+        config.baseBackgroundColor = UIColor(resource: .YPColors.gray)
         config.background.cornerRadius = 16
         
         let button = UIButton(configuration: config)
@@ -71,7 +71,7 @@ final class CreateTrackerViewController: UIViewController {
     }
     
     private func setupScreen() {
-        self.title = "Новая привычка"
+        title = "Новая привычка"
         view.backgroundColor = .systemBackground
     }
     
@@ -84,9 +84,10 @@ final class CreateTrackerViewController: UIViewController {
             guard let self else { return }
             
             let timetableVC = TimetableViewController()
+            let navController = UINavigationController(rootViewController: timetableVC)
             timetableVC.delegate = self
             
-            present(timetableVC, animated: true)
+            present(navController, animated: true)
         }
         
         buttonsStackView.addArrangedSubview(cancelButton)

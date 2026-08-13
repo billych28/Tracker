@@ -14,7 +14,7 @@ final class TextFieldView: UIView {
         
         textField.leftView = paddingView
         textField.leftViewMode = .always
-        textField.backgroundColor = UIColor(resource: .background)
+        textField.backgroundColor = UIColor(resource: .YPColors.background)
         textField.clearButtonMode = .whileEditing
         textField.borderStyle = .none
         textField.layer.cornerRadius = 16
@@ -25,7 +25,7 @@ final class TextFieldView: UIView {
     let errorLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.textColor = UIColor(resource: .red)
+        label.textColor = UIColor(resource: .YPColors.red)
         label.font = .systemFont(ofSize: 17, weight: .regular)
         label.isHidden = true
         label.translatesAutoresizingMaskIntoConstraints = false
