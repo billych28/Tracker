@@ -8,7 +8,10 @@ import UIKit
 
 extension TrackersViewController: TrackerCellDelegate {
     func didTapOnComplete(on cell: TrackerCell) {
-        guard let indexPath = collectionView.indexPath(for: cell) else { return }
+        guard
+            checkIfDateBeforeTomorrow(date: currentDate),
+            let indexPath = collectionView.indexPath(for: cell)
+        else { return }
         
         let tracker = visibleCategories[indexPath.section].trackers[indexPath.row]
         
@@ -24,5 +27,13 @@ extension TrackersViewController: TrackerCellDelegate {
         }
         
         collectionView.reloadItems(at: [indexPath])
+    }
+    
+    private func checkIfDateBeforeTomorrow(date: Date) -> Bool {
+        let calendar = Calendar.current
+        guard let tomorrow = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: Date())) else {
+            return false
+        }
+        return date < tomorrow
     }
 }
