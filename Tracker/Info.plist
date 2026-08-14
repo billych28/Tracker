@@ -19,10 +19,12 @@
 			</array>
 		</dict>
 	</dict>
+	<key>UIDesignRequiresCompatibility</key>
+	<true/>
 	<key>UILaunchScreen</key>
 	<dict>
 		<key>UIColorName</key>
-		<string>ypBlue</string>
+		<string>Blue</string>
 		<key>UIImageName</key>
 		<string>Splash Screen Logo</string>
 	</dict>
