@@ -9,49 +9,49 @@ import UIKit
 extension TrackersViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        visibleCategories.count
+        dataProvider.numberOfSections
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        visibleCategories[section].trackers.count
+        dataProvider.numberOfItemsInSection(section)
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         
-        if kind == UICollectionView.elementKindSectionHeader {
-            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constants.trackersHeaderIdentifier, for: indexPath) as? CategoryHeaderView else {
-                return UICollectionViewCell()
-            }
-            
-            if indexPath.section < visibleCategories.count {
-                header.titleLabel.text = visibleCategories[indexPath.section].title
-            }
-            
-            return header
+        guard kind == UICollectionView.elementKindSectionHeader else {
+            return UICollectionReusableView()
         }
         
-        return UICollectionViewCell()
+        guard let header = collectionView.dequeueReusableSupplementaryView(
+            ofKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: HeaderReusableView.identifier,
+            for: indexPath
+        ) as? HeaderReusableView else {
+            return UICollectionReusableView()
+        }
+        
+        let categoryTitle = dataProvider.categoryTitle(at: indexPath.section)
+        header.titleLabel.text = categoryTitle
+        
+        return header
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.trackerCellIdentifier, for: indexPath) as? TrackerCell else {
+        guard
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackerCell.identifier, for: indexPath) as? TrackerCell,
+            let tracker = dataProvider.tracker(at: indexPath)
+        else {
             return UICollectionViewCell()
         }
         
-        let tracker = visibleCategories[indexPath.section].trackers[indexPath.row]
-        
-        let isCompletedToday = completedTracker.contains { record in
-            record.id == tracker.id && Calendar.current.isDate(record.date, inSameDayAs: currentDate)
-        }
-        
-        let totalCompletedDays = completedTracker.filter { $0.id == tracker.id }.count
-        
-        cell.delegate = self
         cell.emojiLabel.text = tracker.emoji
         cell.titleLabel.text = tracker.name
-        cell.setBackgroundColor(with: tracker.colorName.uiColor)
-        cell.setIsCompleted(with: totalCompletedDays, isCompleted: isCompletedToday)
+        cell.setBackgroundColor(with: tracker.color)
         
+        let details = dataProvider.completionDetails(for: tracker, on: datePicker.date)
+        cell.setIsCompleted(with: details.count, isCompleted: details.isCompleted)
+        
+        cell.delegate = self
         return cell
     }
     

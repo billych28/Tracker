@@ -9,11 +9,9 @@ import UIKit
 extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        let headerView = CategoryHeaderView()
+        let headerView = HeaderReusableView()
         
-        if section < visibleCategories.count {
-            headerView.titleLabel.text = visibleCategories[section].title
-        }
+        headerView.titleLabel.text = dataProvider.categoryTitle(at: section)
         
         let targetSize = CGSize(width: collectionView.frame.width, height: UIView.layoutFittingExpandedSize.height)
         let estimatedSize = headerView.systemLayoutSizeFitting(

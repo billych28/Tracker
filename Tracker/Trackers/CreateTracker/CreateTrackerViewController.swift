@@ -11,8 +11,24 @@ final class CreateTrackerViewController: UIViewController {
     
     weak var delegate: CreateTrackersViewControllerDelegate?
     
-    private let trackerParamItems = ["Категория", "Расписание"]
+    var selectedEmojiIndexPath: IndexPath?
+    var selectedColorIndexPath: IndexPath?
     
+    let columnsCount = 6
+    let itemSpacing = 5
+    let emojis: [String] = [
+        "😀", "😂", "😍", "🥳", "😎", "🤔",
+        "🐶", "🐱", "🦊", "🐼", "🐨", "🦁",
+        "🍎", "🍌", "🍉", "🍓", "🍒", "🍑"
+    ]
+    let colors: [UIColor] = [
+        .YPColors.selection1, .YPColors.selection2, .YPColors.selection3, .YPColors.selection4, .YPColors.selection5,
+        .YPColors.selection6, .YPColors.selection7, .YPColors.selection8, .YPColors.selection9, .YPColors.selection10,
+        .YPColors.selection11, .YPColors.selection12,.YPColors.selection13, .YPColors.selection14, .YPColors.selection15,
+        .YPColors.selection16, .YPColors.selection17, .YPColors.selection18
+    ]
+    
+    private let trackerParamItems = ["Категория", "Расписание"]
     private let textField: TextFieldView = {
         let textFieldView = TextFieldView(frame: .zero, placeholder: "Введите название трекера", limit: 38)
         textFieldView.translatesAutoresizingMaskIntoConstraints = false
@@ -23,6 +39,20 @@ final class CreateTrackerViewController: UIViewController {
         let section = CategoryAndTimetableView()
         section.translatesAutoresizingMaskIntoConstraints = false
         return section
+    }()
+    
+    let collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumInteritemSpacing = 0
+        layout.minimumLineSpacing = 0
+        
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        cv.backgroundColor = .clear
+        cv.showsVerticalScrollIndicator = false
+        cv.register(SelectableItemCell.self, forCellWithReuseIdentifier: SelectableItemCell.identifier)
+        cv.register(HeaderReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HeaderReusableView.identifier)
+        cv.translatesAutoresizingMaskIntoConstraints = false
+        return cv
     }()
     
     private let buttonsStackView: UIStackView = {
@@ -74,11 +104,15 @@ final class CreateTrackerViewController: UIViewController {
         title = "Новая привычка"
         view.backgroundColor = .systemBackground
         parameterSectionView.categoryRow.updateDescription("iOS-разработка")
+        
+        collectionView.dataSource = self
+        collectionView.delegate = self
     }
     
     private func setupUI() {
         view.addSubview(textField)
         view.addSubview(parameterSectionView)
+        view.addSubview(collectionView)
         view.addSubview(buttonsStackView)
         
         parameterSectionView.onTimetableTap = { [weak self] in
@@ -100,13 +134,18 @@ final class CreateTrackerViewController: UIViewController {
             textField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             textField.heightAnchor.constraint(equalToConstant: 75),
             
-            parameterSectionView.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 24),
+            parameterSectionView.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 12),
             parameterSectionView.leadingAnchor.constraint(equalTo: textField.leadingAnchor),
             parameterSectionView.trailingAnchor.constraint(equalTo: textField.trailingAnchor),
             
+            collectionView.topAnchor.constraint(equalTo: parameterSectionView.bottomAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: textField.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: textField.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: buttonsStackView.topAnchor, constant: -16),
+            
             buttonsStackView.leadingAnchor.constraint(equalTo: textField.leadingAnchor),
             buttonsStackView.trailingAnchor.constraint(equalTo: textField.trailingAnchor),
-            buttonsStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            buttonsStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             buttonsStackView.heightAnchor.constraint(equalToConstant: 60)
         ])
     }
@@ -118,16 +157,27 @@ final class CreateTrackerViewController: UIViewController {
         }
         let submitAction = UIAction { [weak self] _ in
             guard let self else { return }
-            
-            guard validateTextField(), let title = textField.textField.text?.trimmingCharacters(in: .whitespacesAndNewlines) else {
-                return
-            }
-            
-            delegate?.didCreateTracker(title: title, weekdays: selectedWeekdays)
-            dismiss(animated: true)
+            didTapSubmit()
         }
         cancelButton.addAction(cancelAction, for: .touchUpInside)
         submitButton.addAction(submitAction, for: .touchUpInside)
+    }
+    
+    private func didTapSubmit() {
+        guard
+            validateTextField(),
+            let emojiIndex = selectedEmojiIndexPath,
+            let colorIndex = selectedColorIndexPath,
+            let title = textField.textField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        else {
+            return
+        }
+        
+        let emoji = emojis[emojiIndex.row]
+        let color = colors[colorIndex.row]
+        
+        delegate?.didCreateTracker(title: title, weekdays: selectedWeekdays, emoji: emoji, color: color)
+        dismiss(animated: true)
     }
     
     private func validateTextField() -> Bool {

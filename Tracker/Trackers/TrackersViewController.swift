@@ -7,17 +7,12 @@
 
 import UIKit
 
-enum Constants {
-    static let trackersHeaderIdentifier = "TrackerHeader"
-    static let trackerCellIdentifier = "TrackerCell"
-}
-
 final class TrackersViewController: UIViewController, UISearchResultsUpdating {
     
     // MARK: - Public properties
-    var visibleCategories: [TrackerCategory] = []
-    var completedTracker: [TrackerRecord] = []
-    var currentDate: Date = Date.now
+    let datePicker = UIDatePicker()
+    let uiColorMarshaling = UIColorMarshalling()
+    var dataProvider: TrackersDataProvider!
     let collectionViewParams = GeometricParams(cellCount: 2, leftInset: 16, rightInset: 16, cellSpacing: 8)
     var collectionView: UICollectionView = {
         let view = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
@@ -26,27 +21,25 @@ final class TrackersViewController: UIViewController, UISearchResultsUpdating {
     }()
     
     // MARK: Private properties
-    private let datePicker = UIDatePicker()
     private let searchController = UISearchController(searchResultsController: nil)
     private var emptyView: EmptyView = {
         let view = EmptyView(frame: .zero)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    private var categories: [TrackerCategory] = [
-        TrackerCategory(title: "iOS-разработка", trackers: [Tracker(name: "Выполнить ДЗ", emoji: "😎", colorName: .green, timetable: [.monday, .friday])])
-    ]
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .systemBackground
+        
+        setupDataProvider()
         setupNavBar()
         setupDatePicker()
         setupCollectionView()
         setupEmptyView()
-        filterTrackersDyDate()
+        updateDataFilter()
     }
     
     // MARK: - Public methods
@@ -55,6 +48,11 @@ final class TrackersViewController: UIViewController, UISearchResultsUpdating {
     }
     
     // MARK: - Private methods
+    private func setupDataProvider() {
+        dataProvider = TrackersDataProvider(context: self.context)
+        dataProvider.delegate = self
+    }
+    
     private func setupNavBar() {
         title = "Трекеры"
         
@@ -104,9 +102,7 @@ final class TrackersViewController: UIViewController, UISearchResultsUpdating {
         
         let changeDateAction = UIAction { [weak self] action in
             guard let self else { return }
-            
-            currentDate = datePicker.date
-            filterTrackersDyDate()
+            updateDataFilter()
         }
         
         datePicker.addAction(changeDateAction, for: .valueChanged)
@@ -122,8 +118,8 @@ final class TrackersViewController: UIViewController, UISearchResultsUpdating {
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
         
-        collectionView.register(TrackerCell.self, forCellWithReuseIdentifier: Constants.trackerCellIdentifier)
-        collectionView.register(CategoryHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constants.trackersHeaderIdentifier)
+        collectionView.register(TrackerCell.self, forCellWithReuseIdentifier: TrackerCell.identifier)
+        collectionView.register(HeaderReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HeaderReusableView.identifier)
         
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -138,48 +134,34 @@ final class TrackersViewController: UIViewController, UISearchResultsUpdating {
         ])
     }
     
-    private func filterTrackersDyDate() {
-        let calendar = Calendar.current
-        let weekday = calendar.component(.weekday, from: currentDate)
-        guard let currentWeekday = Weekday(rawValue: weekday) else { return }
-        
-        var filtered: [TrackerCategory] = []
-        
-        for category in categories {
-            let matchingTrackers = category.trackers.filter { tracker in
-                tracker.timetable.contains(currentWeekday)
-            }
-            
-            if !matchingTrackers.isEmpty {
-                let filteredCategory = TrackerCategory(title: category.title, trackers: matchingTrackers)
-                filtered.append(filteredCategory)
-            }
-        }
-        
-        visibleCategories = filtered
-        
-        updateUIState()
-    }
-    
-    private func updateUIState() {
-        let isListEmpty = visibleCategories.isEmpty
-        
-        collectionView.isHidden = isListEmpty
-        emptyView.isHidden = !isListEmpty
-        
+    private func updateDataFilter() {
+        dataProvider.filterTrackers(by: datePicker.date)
+        collectionView.collectionViewLayout.invalidateLayout()
         collectionView.reloadData()
+        setEmptyViewVisibility()
     }
     
-    private func addTracker(tracker: Tracker) {
-        categories[0] = categories[0].addNewTracker(tracker)
-        filterTrackersDyDate()
+    private func setEmptyViewVisibility() {
+        let hasTrackers = dataProvider.numberOfSections > 0
+        
+        emptyView.isHidden = hasTrackers
+        collectionView.isHidden = !hasTrackers
     }
 }
 
 // MARK: - CreateTrackerViewControllerDelegate
 extension TrackersViewController: CreateTrackersViewControllerDelegate {
-    func didCreateTracker(title: String, weekdays: [Weekday]) {
-        let createdTracker = Tracker(name: title, emoji: "👀", colorName: .red, timetable: weekdays)
-        addTracker(tracker: createdTracker)
+    func didCreateTracker(title: String, weekdays: [Weekday], emoji: String, color: UIColor) {
+        let createdTracker = Tracker(id: UUID(), name: title, emoji: emoji, color: color, timetable: weekdays)
+        
+        dataProvider.add(newTracker: createdTracker, toCategoryTitle: "iOS-разработка")
+    }
+}
+
+extension TrackersViewController: TrackersDataProviderDelegate {
+    func dataProviderDidChangeContent() {
+        collectionView.collectionViewLayout.invalidateLayout()
+        collectionView.reloadData()
+        setEmptyViewVisibility()
     }
 }
