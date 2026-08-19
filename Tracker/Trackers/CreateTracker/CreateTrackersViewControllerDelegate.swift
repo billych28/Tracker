@@ -7,5 +7,5 @@
 import UIKit
 
 protocol CreateTrackersViewControllerDelegate: AnyObject {
-    func didCreateTracker(title: String, weekdays: [Weekday], emoji: String, color: UIColor)
+    func didCreateTracker(title: String, weekdays: [Weekday], emoji: String, colorHex: String)
 }

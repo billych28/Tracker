@@ -13,10 +13,10 @@ extension TrackersViewController: TrackerCellDelegate {
         guard
             checkIfDateBeforeTomorrow(date: currentDate),
             let indexPath = collectionView.indexPath(for: cell),
-            let tracker = dataProvider.tracker(at: indexPath)
+            let tracker = viewModel.tracker(at: indexPath)
         else { return }
         
-        dataProvider.toggleCompletion(for: tracker, on: currentDate)
+        viewModel.toggleCompletion(for: tracker, on: currentDate)
     }
     
     private func checkIfDateBeforeTomorrow(date: Date) -> Bool {

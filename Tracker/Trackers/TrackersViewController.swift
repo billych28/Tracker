@@ -11,13 +11,13 @@ final class TrackersViewController: UIViewController, UISearchResultsUpdating {
     
     // MARK: - Public properties
     let datePicker = UIDatePicker()
-    var dataProvider: TrackersDataProvider!
     let collectionViewParams = GeometricParams(cellCount: 2, leftInset: 16, rightInset: 16, cellSpacing: 8)
     var collectionView: UICollectionView = {
         let view = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    var viewModel: TrackersViewModel!
     
     // MARK: Private properties
     private let searchController = UISearchController(searchResultsController: nil)
@@ -33,7 +33,7 @@ final class TrackersViewController: UIViewController, UISearchResultsUpdating {
         
         view.backgroundColor = .systemBackground
         
-        setupDataProvider()
+        bindViewModel()
         setupNavBar()
         setupDatePicker()
         setupCollectionView()
@@ -42,14 +42,31 @@ final class TrackersViewController: UIViewController, UISearchResultsUpdating {
     }
     
     // MARK: - Public methods
+    func configure(with dataProvider: TrackersDataProvider) {
+        self.viewModel = TrackersViewModel(dataProvider: dataProvider)
+    }
+    
     func updateSearchResults(for searchController: UISearchController) {
         // TODO: реализация будет в 17 спринте
     }
     
     // MARK: - Private methods
-    private func setupDataProvider() {
-        dataProvider = TrackersDataProvider(context: self.context)
-        dataProvider.delegate = self
+    private func bindViewModel() {
+        guard let viewModel = viewModel else { return }
+        
+        viewModel.onDataUpdated = { [weak self] _ in
+            guard let self else { return }
+            
+            collectionView.collectionViewLayout.invalidateLayout()
+            collectionView.reloadData()
+        }
+        
+        viewModel.onEmptyStateChanged = { [weak self] isEmpty in
+            guard let self else { return }
+            
+            emptyView.isHidden = !isEmpty
+            collectionView.isHidden = isEmpty
+        }
     }
     
     private func setupNavBar() {
@@ -134,33 +151,19 @@ final class TrackersViewController: UIViewController, UISearchResultsUpdating {
     }
     
     private func updateDataFilter() {
-        dataProvider.filterTrackers(by: datePicker.date)
-        collectionView.collectionViewLayout.invalidateLayout()
-        collectionView.reloadData()
-        setEmptyViewVisibility()
-    }
-    
-    private func setEmptyViewVisibility() {
-        let hasTrackers = dataProvider.numberOfSections > 0
-        
-        emptyView.isHidden = hasTrackers
-        collectionView.isHidden = !hasTrackers
+        viewModel.filterTrackers(by: datePicker.date)
     }
 }
 
 // MARK: - CreateTrackerViewControllerDelegate
 extension TrackersViewController: CreateTrackersViewControllerDelegate {
-    func didCreateTracker(title: String, weekdays: [Weekday], emoji: String, color: UIColor) {
-        let createdTracker = Tracker(id: UUID(), name: title, emoji: emoji, color: color, timetable: weekdays)
-        
-        dataProvider.add(newTracker: createdTracker, toCategoryTitle: "iOS-разработка")
-    }
-}
-
-extension TrackersViewController: TrackersDataProviderDelegate {
-    func dataProviderDidChangeContent() {
-        collectionView.collectionViewLayout.invalidateLayout()
-        collectionView.reloadData()
-        setEmptyViewVisibility()
+    func didCreateTracker(title: String, weekdays: [Weekday], emoji: String, colorHex: String) {
+        viewModel.addNewTracker(
+            title: title,
+            weekdays: weekdays,
+            emoji: emoji,
+            colorHex: colorHex,
+            currentDate: datePicker.date
+        )
     }
 }

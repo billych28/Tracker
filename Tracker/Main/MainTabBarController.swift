@@ -9,15 +9,29 @@ import UIKit
 
 final class MainTabBarController: UITabBarController {
     
+    private let dataProvider: TrackersDataProvider
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTabs()
         setTabBarDivider()
     }
     
+    init(dataProvider: TrackersDataProvider) {
+        self.dataProvider = dataProvider
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        nil
+    }
+    
     private func setupTabs() {
         let trackersVC = TrackersViewController()
         let statisticsVC = StatisticsViewController()
+        
+        trackersVC.configure(with: dataProvider)
         
         let nav1 = UINavigationController(rootViewController: trackersVC)
         let nav2 = UINavigationController(rootViewController: statisticsVC)

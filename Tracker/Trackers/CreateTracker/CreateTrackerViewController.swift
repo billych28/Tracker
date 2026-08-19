@@ -174,9 +174,9 @@ final class CreateTrackerViewController: UIViewController {
         }
         
         let emoji = emojis[emojiIndex.row]
-        let color = colors[colorIndex.row]
+        let colorHex = UIColorMarshalling.hexString(from: colors[colorIndex.row])
         
-        delegate?.didCreateTracker(title: title, weekdays: selectedWeekdays, emoji: emoji, color: color)
+        delegate?.didCreateTracker(title: title, weekdays: selectedWeekdays, emoji: emoji, colorHex: colorHex)
         dismiss(animated: true)
     }
     

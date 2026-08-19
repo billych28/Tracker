@@ -24,7 +24,7 @@
 	<key>UILaunchScreen</key>
 	<dict>
 		<key>UIColorName</key>
-		<string>Blue</string>
+		<string>YPColors/Blue</string>
 		<key>UIImageName</key>
 		<string>Splash Screen Logo</string>
 	</dict>
