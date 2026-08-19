@@ -7,7 +7,9 @@
 
 import UIKit
 
-final class CategoryHeaderView: UICollectionReusableView {
+final class HeaderReusableView: UICollectionReusableView {
+    static let identifier = "CategoryHeaderView"
+    
     let titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 19, weight: .bold)
@@ -27,7 +29,8 @@ final class CategoryHeaderView: UICollectionReusableView {
         ])  
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        nil
     }
 }

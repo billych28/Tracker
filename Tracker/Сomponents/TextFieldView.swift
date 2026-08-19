@@ -39,8 +39,9 @@ final class TextFieldView: UIView {
         setupViews(placeholder: placeholder)
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) is not implemented")
+        nil
     }
     
     func updateErrorLabel(description: String, isHidden: Bool) {

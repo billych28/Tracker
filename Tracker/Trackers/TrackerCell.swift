@@ -8,6 +8,7 @@
 import UIKit
 
 final class TrackerCell: UICollectionViewCell {
+    static let identifier = "TrackerCell"
     
     weak var delegate: TrackerCellDelegate?
     
@@ -72,8 +73,9 @@ final class TrackerCell: UICollectionViewCell {
         return button
     }()
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        nil
     }
     
     override init(frame: CGRect) {
