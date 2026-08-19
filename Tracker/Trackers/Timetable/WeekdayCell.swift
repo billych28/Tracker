@@ -28,8 +28,9 @@ final class WeekdayCell: UITableViewCell {
         setupToggle()
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) is not implemented")
+        nil
     }
     
     override func prepareForReuse() {

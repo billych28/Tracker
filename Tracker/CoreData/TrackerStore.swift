@@ -9,7 +9,6 @@ import CoreData
 
 final class TrackerStore: NSObject {
     private let context: NSManagedObjectContext
-    private let uiColorMarshalling = UIColorMarshalling()
     
     init(context: NSManagedObjectContext) {
         self.context = context
@@ -21,7 +20,7 @@ final class TrackerStore: NSObject {
         trackerCoreData.id = tracker.id
         trackerCoreData.name = tracker.name
         trackerCoreData.emoji = tracker.emoji
-        trackerCoreData.colorHex = uiColorMarshalling.hexString(from: tracker.color)
+        trackerCoreData.colorHex = UIColorMarshalling.hexString(from: tracker.color)
         trackerCoreData.timetable = tracker.timetable as NSObject
         trackerCoreData.category = categoryCoreData
         

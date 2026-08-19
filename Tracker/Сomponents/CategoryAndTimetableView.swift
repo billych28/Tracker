@@ -38,8 +38,9 @@ final class CategoryAndTimetableView: UIView {
         setupActions()
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) is not implemented")
+        nil
     }
     
     private func setupView() {

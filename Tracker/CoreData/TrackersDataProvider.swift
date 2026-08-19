@@ -7,13 +7,14 @@
 
 import UIKit
 import CoreData
+import Logging
 
 final class TrackersDataProvider: NSObject {
     // MARK: - Public properties
     weak var delegate: TrackersDataProviderDelegate?
     
     var numberOfSections: Int {
-        return visibleCategories.count
+        visibleCategories.count
     }
     
     // MARK: - Private properties
@@ -21,7 +22,6 @@ final class TrackersDataProvider: NSObject {
     private let trackerStore: TrackerStore
     private let recordStore: TrackerRecordStore
     private let categoryStore: TrackerCategoryStore
-    private let uiColorMarshaling = UIColorMarshalling()
     private var fetchedResultsController: NSFetchedResultsController<TrackerCoreData>!
     private var currentSelectedWeekday: Weekday?
     private var visibleCategories: [TrackerCategory] = []
@@ -94,7 +94,7 @@ final class TrackersDataProvider: NSObject {
             let categoryCoreData = try categoryStore.fetchOrCreateCategory(with: title)
             _ = try trackerStore.createTracker(from: newTracker, in: categoryCoreData)
         } catch {
-            print("DataProvider: Ошибка добавления трекера: \(error)")
+            AppDelegate.logger.error("Couldn't add new tracker", metadata: ["view": "TrackersDataProvider", "error": "\(error)"])
         }
     }
     
@@ -117,7 +117,7 @@ final class TrackersDataProvider: NSObject {
             context.refresh(trackerCoreData, mergeChanges: true)
             
         } catch {
-            print("DataProvider: Ошибка переключения статуса: \(error)")
+            AppDelegate.logger.error("Couldn't toggle tracker completion status", metadata: ["view": "TrackersData", "error": "\(error)"])
         }
     }
     
@@ -162,7 +162,7 @@ final class TrackersDataProvider: NSObject {
                 
                 guard timetable.contains(currentWeekday) else { return nil }
                 
-                let color = uiColorMarshaling.color(from: coreDataObj.colorHex ?? "#FFFFFF")
+                let color = UIColorMarshalling.color(from: coreDataObj.colorHex ?? "#FFFFFF")
                 return Tracker(id: id, name: name, emoji: coreDataObj.emoji ?? "👀", color: color, timetable: timetable)
             }
             

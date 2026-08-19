@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Logging
 
 final class WeekdayArrayTransformer: ValueTransformer {
     static let name = NSValueTransformerName(rawValue: String(describing: WeekdayArrayTransformer.self))
@@ -24,7 +25,7 @@ final class WeekdayArrayTransformer: ValueTransformer {
             let data = try JSONEncoder().encode(weekdays)
             return data
         } catch {
-            print("Ошибка кодирования расписания: \(error)")
+            AppDelegate.logger.error("Couldn't encode weekdays", metadata: ["view": "WeekdayArrayTransformer", "error": "\(error)"])
             return nil
         }
     }
@@ -35,7 +36,7 @@ final class WeekdayArrayTransformer: ValueTransformer {
             let weekdays = try JSONDecoder().decode([Weekday].self, from: data)
             return weekdays
         } catch {
-            print("Ошибка декодирования расписания: \(error)")
+            AppDelegate.logger.error("Couldn't decode weekdays", metadata: ["view": "WeekdayArrayTransformer", "error": "\(error)"])
             return nil
         }
     }

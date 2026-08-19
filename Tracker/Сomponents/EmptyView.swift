@@ -30,8 +30,9 @@ final class EmptyView: UIView {
         setupView()
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) is not implemented")
+        nil
     }
     
     private func setupView() {

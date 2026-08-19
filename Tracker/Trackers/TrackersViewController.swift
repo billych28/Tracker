@@ -11,7 +11,6 @@ final class TrackersViewController: UIViewController, UISearchResultsUpdating {
     
     // MARK: - Public properties
     let datePicker = UIDatePicker()
-    let uiColorMarshaling = UIColorMarshalling()
     var dataProvider: TrackersDataProvider!
     let collectionViewParams = GeometricParams(cellCount: 2, leftInset: 16, rightInset: 16, cellSpacing: 8)
     var collectionView: UICollectionView = {
