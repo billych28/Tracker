@@ -8,6 +8,7 @@ import UIKit
 
 final class CategoryAndTimetableView: UIView {
     
+    var onCategoryTap: (() -> Void)?
     var onTimetableTap: (() -> Void)?
     
     let categoryRow = ItemRowView(title: "Категория")
@@ -64,8 +65,13 @@ final class CategoryAndTimetableView: UIView {
     }
     
     private func setupActions() {
+        let categoryGesture = UITapGestureRecognizer(target: self, action: #selector(categoryRowTapped))
         let timetableGesture = UITapGestureRecognizer(target: self, action: #selector(timetableRowTapped))
+        
+        categoryRow.addGestureRecognizer(categoryGesture)
         timetableRow.addGestureRecognizer(timetableGesture)
+        
+        categoryGesture.view?.isUserInteractionEnabled = true
         timetableRow.isUserInteractionEnabled = true
     }
     
@@ -109,6 +115,10 @@ final class CategoryAndTimetableView: UIView {
         ])
         
         return row
+    }
+    
+    @objc private func categoryRowTapped() {
+        onCategoryTap?()
     }
     
     @objc private func timetableRowTapped() {

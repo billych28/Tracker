@@ -31,6 +31,11 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         return container
     }()
     
+    lazy var dataProvider: TrackersDataProvider = {
+        let dataProvider = TrackersDataProvider(context: persistentContainer.viewContext)
+        return dataProvider
+    }()
+    
     override init() {
         super.init()
         WeekdayArrayTransformer.register()

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class OnboardingChildViewController: UIViewController {
+final class OnboardingChildViewController: UIViewController {
     
     private let imageView: UIImageView = {
         let imageView = UIImageView()

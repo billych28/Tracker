@@ -9,29 +9,18 @@ import UIKit
 
 final class MainTabBarController: UITabBarController {
     
-    private let dataProvider: TrackersDataProvider
-    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTabs()
         setTabBarDivider()
     }
     
-    init(dataProvider: TrackersDataProvider) {
-        self.dataProvider = dataProvider
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        nil
-    }
-    
+    // MARK: - Private methods
     private func setupTabs() {
-        let trackersVC = TrackersViewController()
+        let trackersViewModel = TrackersViewModel(dataProvider: dataProvider)
+        let trackersVC = TrackersViewController(viewModel: trackersViewModel)
         let statisticsVC = StatisticsViewController()
-        
-        trackersVC.configure(with: dataProvider)
         
         let nav1 = UINavigationController(rootViewController: trackersVC)
         let nav2 = UINavigationController(rootViewController: statisticsVC)

@@ -136,8 +136,7 @@ final class OnboardingPageViewController: UIPageViewController {
         guard let windowScene = view.window?.windowScene,
               let window = windowScene.windows.first(where: { $0.isKeyWindow }) else { return }
         
-        let dataProvider = TrackersDataProvider(context: context)
-        let mainAppVC = MainTabBarController(dataProvider: dataProvider)
+        let mainAppVC = MainTabBarController()
         let navigationController = UINavigationController(rootViewController: mainAppVC)
         
         window.rootViewController = navigationController
@@ -156,7 +155,10 @@ extension OnboardingPageViewController: UIPageViewControllerDataSource, UIPageVi
         return pages[index - 1]
     }
     
-    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+    func pageViewController(
+        _ pageViewController: UIPageViewController,
+        viewControllerAfter viewController: UIViewController
+    ) -> UIViewController? {
         guard
             let index = pages.firstIndex(of: viewController),
             index < pages.count - 1

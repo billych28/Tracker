@@ -33,10 +33,10 @@ final class TrackersViewModel {
         notifyViewAboutChanges()
     }
     
-    func addNewTracker(title: String, weekdays: [Weekday], emoji: String, colorHex: String, currentDate: Date) {
+    func addNewTracker(title: String, weekdays: [Weekday], emoji: String, colorHex: String, currentDate: Date, toCategory: String) {
         let color = UIColorMarshalling.color(from: colorHex)
         let createdTracker = Tracker(id: UUID(), name: title, emoji: emoji, color: color, timetable: weekdays)
-        dataProvider.add(newTracker: createdTracker, toCategoryTitle: "iOS-разработка")
+        dataProvider.add(newTracker: createdTracker, toCategoryTitle: toCategory)
         
         filterTrackers(by: currentDate)
     }
@@ -47,7 +47,7 @@ final class TrackersViewModel {
     }
     
     func completionDetails(for tracker: Tracker, on date: Date) -> (count: Int, isCompleted: Bool) {
-        return dataProvider.completionDetails(for: tracker, on: date)
+        dataProvider.completionDetails(for: tracker, on: date)
     }
     
     func numberOfItemsInSection(_ section: Int) -> Int {

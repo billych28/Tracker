@@ -20,6 +20,8 @@ final class EmptyView: UIView {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         label.text = "Что будем отслеживать?"
+        label.numberOfLines = 2
+        label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -33,6 +35,10 @@ final class EmptyView: UIView {
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         nil
+    }
+    
+    func setTitle(to title: String) {
+        titleLabel.text = title
     }
     
     private func setupView() {

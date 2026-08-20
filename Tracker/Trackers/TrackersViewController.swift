@@ -10,6 +10,7 @@ import UIKit
 final class TrackersViewController: UIViewController, UISearchResultsUpdating {
     
     // MARK: - Public properties
+    let viewModel: TrackersViewModel
     let datePicker = UIDatePicker()
     let collectionViewParams = GeometricParams(cellCount: 2, leftInset: 16, rightInset: 16, cellSpacing: 8)
     var collectionView: UICollectionView = {
@@ -17,7 +18,6 @@ final class TrackersViewController: UIViewController, UISearchResultsUpdating {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    var viewModel: TrackersViewModel!
     
     // MARK: Private properties
     private let searchController = UISearchController(searchResultsController: nil)
@@ -26,6 +26,17 @@ final class TrackersViewController: UIViewController, UISearchResultsUpdating {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    // MARK: Initializer
+    init(viewModel: TrackersViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        nil
+    }
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -42,18 +53,12 @@ final class TrackersViewController: UIViewController, UISearchResultsUpdating {
     }
     
     // MARK: - Public methods
-    func configure(with dataProvider: TrackersDataProvider) {
-        self.viewModel = TrackersViewModel(dataProvider: dataProvider)
-    }
-    
     func updateSearchResults(for searchController: UISearchController) {
         // TODO: реализация будет в 17 спринте
     }
     
     // MARK: - Private methods
     private func bindViewModel() {
-        guard let viewModel = viewModel else { return }
-        
         viewModel.onDataUpdated = { [weak self] _ in
             guard let self else { return }
             
@@ -157,13 +162,14 @@ final class TrackersViewController: UIViewController, UISearchResultsUpdating {
 
 // MARK: - CreateTrackerViewControllerDelegate
 extension TrackersViewController: CreateTrackersViewControllerDelegate {
-    func didCreateTracker(title: String, weekdays: [Weekday], emoji: String, colorHex: String) {
+    func didCreateTracker(title: String, weekdays: [Weekday], emoji: String, colorHex: String, toCategory: String) {
         viewModel.addNewTracker(
             title: title,
             weekdays: weekdays,
             emoji: emoji,
             colorHex: colorHex,
-            currentDate: datePicker.date
+            currentDate: datePicker.date,
+            toCategory: toCategory
         )
     }
 }

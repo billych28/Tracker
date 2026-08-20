@@ -90,6 +90,7 @@ final class CreateTrackerViewController: UIViewController {
         return button
     }()
     
+    private var selectedCategory: String = ""
     private var selectedWeekdays: [Weekday] = []
     
     override func viewDidLoad() {
@@ -103,7 +104,6 @@ final class CreateTrackerViewController: UIViewController {
     private func setupScreen() {
         title = "Новая привычка"
         view.backgroundColor = .systemBackground
-        parameterSectionView.categoryRow.updateDescription("iOS-разработка")
         
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -114,6 +114,17 @@ final class CreateTrackerViewController: UIViewController {
         view.addSubview(parameterSectionView)
         view.addSubview(collectionView)
         view.addSubview(buttonsStackView)
+        
+        parameterSectionView.onCategoryTap = { [weak self] in
+            guard let self else { return }
+            
+            let categoriesViewModel = CategoriesViewModel(dataProvider: dataProvider)
+            let categoriesVC = CategoriesViewController(viewModel: categoriesViewModel)
+            let navController = UINavigationController(rootViewController: categoriesVC)
+            categoriesVC.delegate = self
+            
+            present(navController, animated: true)
+        }
         
         parameterSectionView.onTimetableTap = { [weak self] in
             guard let self else { return }
@@ -166,6 +177,8 @@ final class CreateTrackerViewController: UIViewController {
     private func didTapSubmit() {
         guard
             validateTextField(),
+            !selectedCategory.isEmpty,
+            !selectedWeekdays.isEmpty,
             let emojiIndex = selectedEmojiIndexPath,
             let colorIndex = selectedColorIndexPath,
             let title = textField.textField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -176,7 +189,7 @@ final class CreateTrackerViewController: UIViewController {
         let emoji = emojis[emojiIndex.row]
         let colorHex = UIColorMarshalling.hexString(from: colors[colorIndex.row])
         
-        delegate?.didCreateTracker(title: title, weekdays: selectedWeekdays, emoji: emoji, colorHex: colorHex)
+        delegate?.didCreateTracker(title: title, weekdays: selectedWeekdays, emoji: emoji, colorHex: colorHex, toCategory: selectedCategory)
         dismiss(animated: true)
     }
     
@@ -188,6 +201,13 @@ final class CreateTrackerViewController: UIViewController {
         
         textField.updateErrorLabel(description: "", isHidden: true)
         return true
+    }
+}
+
+extension CreateTrackerViewController: CategoryListViewControllerDelegate {
+    func didSelectCategory(_ categoryName: String) {
+        selectedCategory = categoryName
+        parameterSectionView.categoryRow.updateDescription(categoryName)
     }
 }
 
