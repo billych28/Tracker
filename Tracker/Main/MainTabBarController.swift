@@ -9,14 +9,17 @@ import UIKit
 
 final class MainTabBarController: UITabBarController {
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTabs()
         setTabBarDivider()
     }
     
+    // MARK: - Private methods
     private func setupTabs() {
-        let trackersVC = TrackersViewController()
+        let trackersViewModel = TrackersViewModel(dataProvider: dataProvider)
+        let trackersVC = TrackersViewController(viewModel: trackersViewModel)
         let statisticsVC = StatisticsViewController()
         
         let nav1 = UINavigationController(rootViewController: trackersVC)

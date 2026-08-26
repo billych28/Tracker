@@ -7,13 +7,15 @@
 
 import UIKit
 import CoreData
+import Logging
 
 extension UIViewController {
-    var context: NSManagedObjectContext {
+    var dataProvider: TrackersDataProvider {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            fatalError("Не удалось привести UIApplication.shared.delegate к AppDelegate")
+            AppDelegate.logger.error("Не удалось привести UIApplication.shared.delegate к AppDelegate")
+            fatalError()
         }
         
-        return appDelegate.persistentContainer.viewContext
+        return appDelegate.dataProvider
     }
 }

@@ -27,4 +27,24 @@ final class TrackerCategoryStore: NSObject {
             return newCategory
         }
     }
+    
+    func updateCategory(from oldTitle: String, to newTitle: String) throws {
+        let request = TrackerCategoryCoreData.fetchRequest()
+        request.predicate = NSPredicate(format: "title == %@", oldTitle)
+        
+        if let categoryCoreData = try context.fetch(request).first {
+            categoryCoreData.title = newTitle.trimmingCharacters(in: .whitespacesAndNewlines)
+            try context.save()
+        }
+    }
+    
+    func deleteCategory(with title: String) throws {
+        let request = TrackerCategoryCoreData.fetchRequest()
+        request.predicate = NSPredicate(format: "title == %@", title)
+        
+        if let categoryCoreData = try context.fetch(request).first {
+            context.delete(categoryCoreData)
+            try context.save()
+        }
+    }
 }

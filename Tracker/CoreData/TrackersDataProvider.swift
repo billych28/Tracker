@@ -38,6 +38,20 @@ final class TrackersDataProvider: NSObject {
         rebuildVisibleCategories()
     }
     
+    func fetchAllCategories() -> [String] {
+        let request = TrackerCategoryCoreData.fetchRequest()
+        
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \TrackerCategoryCoreData.title, ascending: true)]
+        
+        do {
+            let categoriesCoreData = try context.fetch(request)
+            return categoriesCoreData.compactMap { $0.title }
+        } catch {
+            AppDelegate.logger.error("Failed to fetch all categories from Core Data", metadata: ["view": "TrackersDataProvider", "error": "\(error)"])
+            return []
+        }
+    }
+    
     private func setupFetchedResultsController() {
         let fetchRequest = TrackerCoreData.fetchRequest()
         fetchRequest.sortDescriptors = [
@@ -89,12 +103,23 @@ final class TrackersDataProvider: NSObject {
         rebuildVisibleCategories()
     }
     
+    func addCategory(with title: String) {
+        let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedTitle.isEmpty else { return }
+        
+        do {
+            _ = try categoryStore.fetchOrCreateCategory(with: trimmedTitle)
+        } catch {
+            AppDelegate.logger.error("Couldn't add new empty category", metadata: ["view": "TrackersDataProvider", "error": "\(error)"])
+        }
+    }
+    
     func add(newTracker: Tracker, toCategoryTitle title: String) {
         do {
             let categoryCoreData = try categoryStore.fetchOrCreateCategory(with: title)
             _ = try trackerStore.createTracker(from: newTracker, in: categoryCoreData)
         } catch {
-            AppDelegate.logger.error("Couldn't add new tracker", metadata: ["view": "TrackersDataProvider", "error": "\(error)"])
+            AppDelegate.logger.error("Couldn't add new tracker to category \(title)", metadata: ["view": "TrackersDataProvider", "error": "\(error)"])
         }
     }
     
@@ -117,7 +142,7 @@ final class TrackersDataProvider: NSObject {
             context.refresh(trackerCoreData, mergeChanges: true)
             
         } catch {
-            AppDelegate.logger.error("Couldn't toggle tracker completion status", metadata: ["view": "TrackersData", "error": "\(error)"])
+            AppDelegate.logger.error("Couldn't toggle tracker completion status", metadata: ["view": "TrackersDataProvider", "error": "\(error)"])
         }
     }
     
@@ -135,6 +160,22 @@ final class TrackersDataProvider: NSObject {
         }
         
         return (count, isCompleted)
+    }
+    
+    func updateCategory(oldTitle: String, newTitle: String) {
+        do {
+            try categoryStore.updateCategory(from: oldTitle, to: newTitle)
+        } catch {
+            AppDelegate.logger.error("Couldn't update tracker category", metadata: ["view": "TrackersDataProvider", "error": "\(error)"])
+        }
+    }
+    
+    func deleteCategory(with title: String) {
+        do {
+            try categoryStore.deleteCategory(with: title)
+        } catch {
+            AppDelegate.logger.error("Couldn't delete tracker category", metadata: ["view": "TrackersDataProvider", "error": "\(error)"])
+        }
     }
     
     // MARK: - Private methods
