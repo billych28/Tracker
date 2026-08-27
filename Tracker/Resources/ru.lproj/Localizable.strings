@@ -1,0 +1,53 @@
+"onboarding_button_title" = "Вот это технологии!";
+"onboarding_first_page_title" = "Отслеживайте только то, что хотите";
+"onboarding_second_page_title" = "Даже если это не литры воды и йога";
+
+"trackers_title" = "Трекеры";
+"statistics_title" = "Статистика";
+"create_tracker_title" = "Новая привычка";
+"create_category_title" = "Новая категория";
+"categories_title" = "Категория";
+"edit_category_title" = "Редактирование категории";
+"edit_tracker_title" = "Редактирование привычки";
+"timetable_title" = "Расписание";
+"done_button_title" = "Готово";
+
+"trackers_search_placeholder" = "Поиск";
+"trackers_empty_state_title" = "Что будем отслеживать?";
+"trackers_search_empty_state_title" = "Ничего не найдено";
+"trackers_edit_action_title" = "Редактировать";
+"trackers_delete_action_title" = "Удалить";
+"trackers_cancel_action_title" = "Отменить";
+"trackers_delete_alert_title" = "Уверены что хотите удалить трекер?";
+
+"create_tracker_category_title" = "Категория";
+"create_tracker_timetable_title" = "Расписание";
+"create_tracker_name_placeholder" = "Введите название трекера";
+"create_tracker_text_field_error_description" = "Заполните поле";
+"create_tracker_emoji_section_title" = "Эмодзи";
+"create_tracker_color_section_title" = "Цвет";
+"]" = "Создать";
+"create_tracker_cancel_button_title" = "Отменить";
+"edit_tracker_save_button_title" = "Сохранить";
+
+"create_category_name_placeholder" = "Введите название категории";
+
+"categories_empty_state_title" = "Привычки и события можно\nобъединить по смыслу";
+"categories_add_button_title" = "Добавить категорию";
+"categories_edit_action_title" = "Редактировать";
+"categories_delete_action_title" = "Удалить";
+"categories_delete_alert_title" = "Эта категория точно не нужна?";
+"categories_delete_alert_cancel_title" = "Отменить";
+
+"filters_button_title" = "Фильтры";
+
+"statistics_empty_state_title" = "Анализировать пока нечего";
+"statistics_best_period" = "Лучший период";
+"statistics_perfect_days" = "Идеальные дни";
+"statistics_total_completed" = "Трекеров завершено";
+"statistics_average" = "Среднее значение";
+
+"filter_all_title" = "Все трекеры";
+"filter_today_title" = "Трекеры на сегодня";
+"filter_completed_title" = "Завершенные";
+"filter_uncompleted_title" = "Не завершенные";

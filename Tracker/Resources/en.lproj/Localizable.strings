@@ -1,0 +1,53 @@
+"onboarding_button_title" = "These are the technologies!";
+"onboarding_first_page_title" = "Track only what you want";
+"onboarding_second_page_title" = "Even if it’s not about liters of water and yoga";
+
+"trackers_title" = "Trackers";
+"statistics_title" = "Statistics";
+"create_tracker_title" = "New tracker";
+"create_category_title" = "New category";
+"categories_title" = "Category";
+"edit_category_title" = "Edit category";
+"edit_tracker_title" = "Edit tracker";
+"timetable_title" = "Timetable";
+"done_button_title" = "Done";
+
+"trackers_search_placeholder" = "Search";
+"trackers_empty_state_title" = "What are we going to track?";
+"trackers_search_empty_state_title" = "Nothing was found";
+"trackers_edit_action_title" = "Edit";
+"trackers_delete_action_title" = "Delete";
+"trackers_cancel_action_title" = "Cancel";
+"trackers_delete_alert_title" = "Are you sure you want to delete the tracker?";
+
+"create_tracker_category_title" = "Category";
+"create_tracker_timetable_title" = "Timetable";
+"create_tracker_name_placeholder" = "Enter tracker name";
+"create_tracker_text_field_error_description" = "Fill in the field";
+"create_tracker_emoji_section_title" = "Emoji";
+"create_tracker_color_section_title" = "Color";
+"create_tracker_button_title" = "Create";
+"create_tracker_cancel_button_title" = "Cancel";
+"edit_tracker_save_button_title" = "Save";
+
+"create_category_name_placeholder" = "Enter category name";
+
+"categories_empty_state_title" = "Habits and events \ncan be grouped by meaning";
+"categories_add_button_title" = "Add category";
+"categories_edit_action_title" = "Edit";
+"categories_delete_action_title" = "Delete";
+"categories_delete_alert_title" = "Are you sure you don't need this category?";
+"categories_delete_alert_cancel_title" = "Cancel";
+
+"filters_button_title" = "Filters";
+
+"statistics_empty_state_title" = "There is nothing to analyze yet";
+"statistics_best_period" = "Best period";
+"statistics_perfect_days" = "Perfect days";
+"statistics_total_completed" = "Trackers competed";
+"statistics_average" = "Average value";
+
+"filter_all_title" = "All trackers";
+"filter_today_title" = "Trackers for today";
+"filter_completed_title" = "Completed";
+"filter_uncompleted_title" = "Uncompleted";

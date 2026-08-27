@@ -11,7 +11,7 @@ final class ItemRowView: UIView {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 17, weight: .regular)
-        label.textColor = UIColor(resource: .black)
+        label.textColor = UIColor(resource: .YPColors.black)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

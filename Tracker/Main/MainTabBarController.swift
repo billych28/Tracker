@@ -25,13 +25,16 @@ final class MainTabBarController: UITabBarController {
         let nav1 = UINavigationController(rootViewController: trackersVC)
         let nav2 = UINavigationController(rootViewController: statisticsVC)
         
+        let trackersTabBarItemTitle = NSLocalizedString("trackers_title", comment: "Trackers TabBarItem title")
+        let statisticsTabBarItemTitle = NSLocalizedString("statistics_title", comment: "Statistics TabBarItem title")
+        
         trackersVC.tabBarItem = UITabBarItem(
-            title: "Трекеры",
+            title: trackersTabBarItemTitle,
             image: UIImage(resource: .trackersIcon),
             tag: 0
         )
         statisticsVC.tabBarItem = UITabBarItem(
-            title: "Статистика",
+            title: statisticsTabBarItemTitle,
             image: UIImage(resource: .statisticsIcon),
             tag: 1
         )
@@ -44,6 +47,7 @@ final class MainTabBarController: UITabBarController {
             
         appearance.configureWithOpaqueBackground()
         appearance.shadowColor = UIColor.gray
+        appearance.backgroundColor = .YPColors.white
                 
         tabBar.standardAppearance = appearance
         tabBar.scrollEdgeAppearance = appearance

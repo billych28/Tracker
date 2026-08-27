@@ -4,7 +4,6 @@
 //
 //  Created by Мамытов Руслан on 18.08.2026.
 //
-
 import CoreData
 
 final class TrackerRecordStore: NSObject {
@@ -21,6 +20,36 @@ final class TrackerRecordStore: NSObject {
         recordCoreData.tracker = trackerCoreData
         
         try context.save()
+    }
+    
+    func fetchCompletedTrackersIDs(for date: Date) -> [UUID] {
+        let calendar = Calendar.current
+        
+        let startOfDay = calendar.startOfDay(for: date)
+        guard let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay) else {
+            return []
+        }
+        
+        let request = TrackerRecordCoreData.fetchRequest()
+        
+        // Ищем записи строго внутри выбранных суток
+        request.predicate = NSPredicate(
+            format: "date >= %@ AND date < %@",
+            startOfDay as NSDate,
+            endOfDay as NSDate
+        )
+        
+        do {
+            let recordsCoreData = try context.fetch(request)
+            
+            let completedIDs = recordsCoreData.compactMap { record -> UUID? in
+                return record.tracker?.id
+            }
+    
+            return completedIDs
+        } catch {
+            return []
+        }
     }
     
     func remove(_ record: TrackerRecord) throws {

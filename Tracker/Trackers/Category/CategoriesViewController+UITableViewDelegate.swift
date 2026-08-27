@@ -29,9 +29,10 @@ extension CategoriesViewController: UITableViewDelegate {
     }
     
     private func getContextMenu(for categoryTitle: String, at indexPath: IndexPath) -> UIMenu {
-        let editAction = UIAction(title: "Редактировать") { _ in
+        let editActionTitle = NSLocalizedString("categories_edit_action_title", comment: "Edit category action title")
+        let editAction = UIAction(title: editActionTitle) { _ in
             let editCategoryVC = CreateCategoryViewController()
-            editCategoryVC.title = "Редактирование категории"
+            editCategoryVC.title = NSLocalizedString("edit_category_title", comment: "Title for edit category screen")
             editCategoryVC.setInitialText(with: categoryTitle)
             
             editCategoryVC.onCategoryCreated = { [weak self] updatedTitle in
@@ -43,19 +44,22 @@ extension CategoriesViewController: UITableViewDelegate {
             self.present(navController, animated: true)
         }
         
-        let deleteAction = UIAction(title: "Удалить", attributes: .destructive) { _ in
+        let deleteActionTitle = NSLocalizedString("categories_delete_action_title", comment: "Delete category action title")
+        let deleteAction = UIAction(title: deleteActionTitle, attributes: .destructive) { _ in
+            let alertTitle = NSLocalizedString("categories_delete_alert_title", comment: "Delete alert title")
             let alert = UIAlertController(
-                title: "Эта категория точно не нужна?",
+                title: alertTitle,
                 message: nil,
                 preferredStyle: .actionSheet
             )
             
-            let confirmDelete = UIAlertAction(title: "Удалить", style: .destructive) { [weak self] _ in
+            let confirmDelete = UIAlertAction(title: deleteActionTitle, style: .destructive) { [weak self] _ in
                 guard let self else { return }
                 deleteCategory(at: indexPath)
             }
             
-            let cancel = UIAlertAction(title: "Отменить", style: .cancel)
+            let cancelActionTitle = NSLocalizedString("categories_delete_alert_cancel_title", comment: "Cancel action title")
+            let cancel = UIAlertAction(title: cancelActionTitle, style: .cancel)
             
             alert.addAction(confirmDelete)
             alert.addAction(cancel)

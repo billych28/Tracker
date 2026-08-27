@@ -13,6 +13,7 @@ final class SelectableItemCell: UICollectionViewCell {
     private let bgView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 8
+        view.layer.masksToBounds = true
         return view
     }()
     

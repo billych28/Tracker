@@ -13,7 +13,7 @@ final class CategoryCell: UITableViewCell {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 17, weight: .regular)
-        label.textColor = .label
+        label.textColor = .YPColors.black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

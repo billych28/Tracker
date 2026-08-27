@@ -19,16 +19,16 @@ final class TimetableViewController: UIViewController {
     private var selectedWeekdays: Set<Weekday> = []
     private let tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .insetGrouped)
-        tableView.backgroundColor = UIColor(resource: .YPColors.background)
+        tableView.backgroundColor = .clear
         tableView.isScrollEnabled = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
     private let submitButton: UIButton = {
         var config = UIButton.Configuration.filled()
-        config.title = "Готово"
-        config.baseForegroundColor = .white
-        config.baseBackgroundColor = UIColor(resource: .black)
+        config.title = NSLocalizedString("done_button_title", comment: "Done button title")
+        config.baseForegroundColor = .YPColors.white
+        config.baseBackgroundColor = .YPColors.black
         config.background.cornerRadius = 16
         
         let button = UIButton(configuration: config)
@@ -43,8 +43,8 @@ final class TimetableViewController: UIViewController {
     }
     
     private func setupUI() {
-        title = "Расписание"
-        view.backgroundColor = .systemBackground
+        title = NSLocalizedString("timetable_title", comment: "Title for timetable screen")
+        view.backgroundColor = .YPColors.white
         
         tableView.register(WeekdayCell.self, forCellReuseIdentifier: TimetableViewControllerConstants.weekdayCellIdentifier)
         tableView.dataSource = self
@@ -53,7 +53,7 @@ final class TimetableViewController: UIViewController {
         let submitAction = UIAction { [weak self] _ in
             guard let self else { return }
             
-            delegate?.dateSelected(self, didSelectWeekdays: Array(selectedWeekdays))
+            delegate?.dateSelected(didSelectWeekdays: Array(selectedWeekdays))
             dismiss(animated: true)
         }
         

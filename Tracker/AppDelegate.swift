@@ -8,6 +8,7 @@
 import UIKit
 import CoreData
 import Logging
+import AppMetricaCore
 
 enum AppDelegateConstants {
     static let persistentContainerName = "TrackerModel"
@@ -42,9 +43,16 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     // MARK: UISceneSession Lifecycle
-    
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
         UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+    }
+    
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        if let configuration = AppMetricaConfiguration(apiKey: "") {
+            AppMetrica.activate(with: configuration)
+        }
+        
+        return true
     }
     
     func applicationWillTerminate(_ application: UIApplication) {

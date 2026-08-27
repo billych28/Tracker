@@ -12,13 +12,13 @@ final class OnboardingPageViewController: UIPageViewController {
     private var pages: [UIViewController] = []
     
     private let pageControl: UIPageControl = {
-        let pc = UIPageControl()
-        pc.backgroundColor = .clear
-        pc.pageIndicatorTintColor = .YPColors.gray
-        pc.currentPageIndicatorTintColor = .black
-        pc.isUserInteractionEnabled = false
-        pc.translatesAutoresizingMaskIntoConstraints = false
-        return pc
+        let pageControl = UIPageControl()
+        pageControl.backgroundColor = .clear
+        pageControl.pageIndicatorTintColor = .YPColors.gray
+        pageControl.currentPageIndicatorTintColor = .black
+        pageControl.isUserInteractionEnabled = false
+        pageControl.translatesAutoresizingMaskIntoConstraints = false
+        return pageControl
     }()
     
     private let actionButton: UIButton = {
@@ -27,7 +27,8 @@ final class OnboardingPageViewController: UIPageViewController {
         config.baseForegroundColor = .white
         
         let button = UIButton(configuration: config)
-        button.setTitle("Вот это технологии!", for: .normal)
+        let title = NSLocalizedString("onboarding_button_title", comment: "Text displayed on next button")
+        button.setTitle(title, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         button.layer.cornerRadius = 16
         button.layer.masksToBounds = true
@@ -57,17 +58,19 @@ final class OnboardingPageViewController: UIPageViewController {
     }
     
     private func setupPages() {
-        let page1 = OnboardingChildViewController(
+        let firstPageTitle = NSLocalizedString("onboarding_first_page_title", comment: "Title on first page of onboarding")
+        let secondPageTitle = NSLocalizedString("onboarding_second_page_title", comment: "Title on second page of onboarding")
+        
+        let firstPage = OnboardingChildViewController(
             image: UIImage(resource: .onboarding1),
-            title: "Отслеживайте только то, что хотите"
+            title: firstPageTitle,
         )
-        
-        let page2 = OnboardingChildViewController(
+        let secondPage = OnboardingChildViewController(
             image: UIImage(resource: .onboarding2),
-            title: "Даже если это не литры воды и йога",
+            title: secondPageTitle,
         )
         
-        pages = [page1, page2]
+        pages = [firstPage, secondPage]
         
         if let firstPage = pages.first {
             setViewControllers([firstPage], direction: .forward, animated: true)
