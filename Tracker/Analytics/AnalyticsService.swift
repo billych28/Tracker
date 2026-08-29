@@ -12,13 +12,13 @@ final class AnalyticsService {
     
     private init() {}
     
-    func report(event: String, screen: String, item: String? = nil) {
+    func report(event: ScreenEvent, screen: ScreenName, item: String? = nil) {
         var params: [String: Any] = [
-            "event": event,
-            "screen": screen
+            "event": event.rawValue,
+            "screen": screen.rawValue
         ]
         
-        if let item = item {
+        if let item {
             params["item"] = item
         }
         

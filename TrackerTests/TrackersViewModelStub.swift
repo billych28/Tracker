@@ -8,8 +8,8 @@ import UIKit
 @testable import Tracker
 
 final class TrackersViewModelStub: TrackersViewModelProtocol {
-    var onDataUpdated: Binding<Void>? = nil
-    var onEmptyStateChanged: Binding<Bool>? = nil
+    var onDataUpdated: Binding<Void>?
+    var onEmptyStateChanged: Binding<Bool>?
     
     let numberOfSections: Int = 1
     
@@ -37,6 +37,15 @@ final class TrackersViewModelStub: TrackersViewModelProtocol {
     }
     
     func addNewTracker(title: String, weekdays: [Weekday], emoji: String, colorHex: String, currentDate: Date, toCategory: String) {
+    }
+    
+    func filterTrackers(by date: Date, searchString: String, filter: TrackerFilter) {
+    }
+    
+    func updateTracker(_ tracker: Tracker, newTitle: String, weekdays: [Weekday], emoji: String, colorHex: String, newCategory: String, currentDate: Date) {
+    }
+    
+    func deleteTracker(_ tracker: Tracker) {
     }
     
 }

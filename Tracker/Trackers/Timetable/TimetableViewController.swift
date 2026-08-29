@@ -26,7 +26,7 @@ final class TimetableViewController: UIViewController {
     }()
     private let submitButton: UIButton = {
         var config = UIButton.Configuration.filled()
-        config.title = NSLocalizedString("done_button_title", comment: "Done button title")
+        config.title = NSLocalizedString("done_action_title", comment: "Done button title")
         config.baseForegroundColor = .YPColors.white
         config.baseBackgroundColor = .YPColors.black
         config.background.cornerRadius = 16

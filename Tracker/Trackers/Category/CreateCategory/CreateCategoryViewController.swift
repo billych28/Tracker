@@ -22,7 +22,7 @@ final class CreateCategoryViewController: UIViewController {
     
     private let doneButton: UIButton = {
         var config = UIButton.Configuration.filled()
-        config.title = NSLocalizedString("done_button_title", comment: "Create category button title")
+        config.title = NSLocalizedString("done_action_title", comment: "Create category button title")
         config.baseBackgroundColor = .YPColors.black
         config.baseForegroundColor = .YPColors.white
         

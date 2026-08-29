@@ -32,7 +32,7 @@ final class CategoriesViewController: UIViewController {
     
     private var emptyView: EmptyView = {
         let view = EmptyView(frame: .zero)
-        let title = NSLocalizedString("categories_empty_view_title", comment: "Title for empty view in category screen")
+        let title = NSLocalizedString("categories_empty_state_title", comment: "Title for empty view in category screen")
         view.setTitle(to: title)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view

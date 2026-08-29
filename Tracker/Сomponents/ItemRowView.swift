@@ -20,6 +20,7 @@ final class ItemRowView: UIView {
         let label = UILabel()
         label.font = .systemFont(ofSize: 17, weight: .regular)
         label.textColor = UIColor(resource: .YPColors.gray)
+        label.isHidden = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -33,6 +34,9 @@ final class ItemRowView: UIView {
         return imageView
     }()
     
+    private var titleCenterYConstraint: NSLayoutConstraint?
+    private var titleTopConstraint: NSLayoutConstraint?
+    
     init(title: String) {
         super.init(frame: .zero)
         titleLabel.text = title
@@ -45,7 +49,13 @@ final class ItemRowView: UIView {
     }
     
     func updateDescription(_ text: String) {
+        let isEmpty = text.isEmpty
+        
         descriptionLabel.text = text
+        descriptionLabel.isHidden = isEmpty
+        
+        titleCenterYConstraint?.isActive = isEmpty
+        titleTopConstraint?.isActive = !isEmpty
     }
     
     private func setupView() {
@@ -56,14 +66,19 @@ final class ItemRowView: UIView {
         NSLayoutConstraint.activate([
             heightAnchor.constraint(equalToConstant: 75),
             
-            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 16),
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             
             descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 2),
             descriptionLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+            descriptionLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
             
             chevron.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             chevron.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
+        
+        titleCenterYConstraint = titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
+        titleTopConstraint = titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 16)
+        
+        titleCenterYConstraint?.isActive = true
     }
 }

@@ -23,13 +23,13 @@ extension TrackersViewController: UICollectionViewDelegate {
             guard let self else { return nil }
             
             let editAction = UIAction(
-                title: NSLocalizedString("trackers_edit_action_title", comment: "Edit tracker")
+                title: NSLocalizedString("edit_action_title", comment: "Edit tracker")
             ) { _ in
                 self.editTracker(for: tracker, at: indexPath, with: completionDetails.count)
             }
             
             let deleteAction = UIAction(
-                title: NSLocalizedString("trackers_delete_action_title", comment: "Delete tracker"),
+                title: NSLocalizedString("delete_action_title", comment: "Delete tracker"),
                 attributes: .destructive
             ) { _ in
                 self.showDeleteAlert(for: tracker)
@@ -63,7 +63,7 @@ extension TrackersViewController: UICollectionViewDelegate {
         )
         
         let deleteAction = UIAlertAction(
-            title: NSLocalizedString("trackers_delete_action_title", comment: "Delete tracker"),
+            title: NSLocalizedString("delete_action_title", comment: "Delete tracker"),
             style: .destructive
         ) { [weak self] _ in
             guard let self else { return }
@@ -72,7 +72,7 @@ extension TrackersViewController: UICollectionViewDelegate {
         }
         
         let cancelAction = UIAlertAction(
-            title: NSLocalizedString("trackers_cancel_action_title", comment: "Отменить"),
+            title: NSLocalizedString("cancel_action_title", comment: "Отменить"),
             style: .cancel
         )
         

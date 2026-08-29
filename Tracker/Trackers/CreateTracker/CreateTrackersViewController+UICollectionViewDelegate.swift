@@ -32,5 +32,6 @@ extension CreateTrackerViewController: UICollectionViewDelegate {
         }
         
         collectionView.reloadItems(at: indexPathsToReload)
+        checkFormValidation()
     }
 }

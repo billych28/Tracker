@@ -8,7 +8,7 @@
 import UIKit
 
 final class CreateTrackerViewController: UIViewController {
-    
+    // MARK: - Public properties
     weak var delegate: CreateTrackersViewControllerDelegate?
     
     var selectedEmojiIndexPath: IndexPath?
@@ -28,9 +28,10 @@ final class CreateTrackerViewController: UIViewController {
         .YPColors.selection16, .YPColors.selection17, .YPColors.selection18
     ]
     
+    // MARK: - Private properties
     private let trackerParamItems = [
-        NSLocalizedString("create_tracker_category_title", comment: "Title for category item"),
-        NSLocalizedString("create_tracker_timetable_title", comment: "Title for timetable item"),
+        NSLocalizedString("categories_title", comment: "Title for category item"),
+        NSLocalizedString("timetable_title", comment: "Title for timetable item"),
     ]
     private let completedCountLabel: UILabel = {
         let label = UILabel()
@@ -47,7 +48,6 @@ final class CreateTrackerViewController: UIViewController {
         textFieldView.translatesAutoresizingMaskIntoConstraints = false
         return textFieldView
     }()
-    
     private let parameterSectionView: CategoryAndTimetableView = {
         let section = CategoryAndTimetableView()
         section.translatesAutoresizingMaskIntoConstraints = false
@@ -79,7 +79,7 @@ final class CreateTrackerViewController: UIViewController {
     
     private let cancelButton: UIButton = {
         var config = UIButton.Configuration.bordered()
-        config.title = NSLocalizedString("create_tracker_cancel_button_title", comment: "Cancel button title")
+        config.title = NSLocalizedString("cancel_action_title", comment: "Cancel button title")
         config.baseForegroundColor = UIColor(resource: .YPColors.red)
         config.baseBackgroundColor = .clear
         config.background.strokeColor = UIColor(resource: .YPColors.red)
@@ -94,11 +94,16 @@ final class CreateTrackerViewController: UIViewController {
     private let submitButton: UIButton = {
         var config = UIButton.Configuration.filled()
         config.title = NSLocalizedString("create_tracker_button_title", comment: "Create tracker button")
-        config.baseForegroundColor = .YPColors.white
-        config.baseBackgroundColor = .YPColors.gray
         config.background.cornerRadius = 16
         
+        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
+            var outgoing = incoming
+            outgoing.foregroundColor = .white
+            return outgoing
+        }
+        
         let button = UIButton(configuration: config)
+        button.isEnabled = false
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -114,19 +119,35 @@ final class CreateTrackerViewController: UIViewController {
         self.selectedCategory = categoryTitle
         self.selectedWeekdays = editingTracker.timetable
         self.completedCountLabel.text = String.localizedStringWithFormat(
-            NSLocalizedString("trackers_cell_days_count", comment: "Number of completed days"),
+            NSLocalizedString("tracker_cell_days_count", comment: "Number of completed days"),
             completionCount
         )
     }
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupScreen()
         setupUI()
+        setupTextField()
         setupButtons()
     }
     
+    // MARK: - Public methods
+    func checkFormValidation() {
+        let isTextValid = !(textField.textField.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+        let isCategoryValid = !selectedCategory.isEmpty
+        let isWeekdaysValid = !selectedWeekdays.isEmpty
+        let isEmojiValid = selectedEmojiIndexPath != nil
+        let isColorValid = selectedColorIndexPath != nil
+        
+        let isFormValid = isTextValid && isCategoryValid && isWeekdaysValid && isEmojiValid && isColorValid
+        
+        submitButton.isEnabled = isFormValid
+    }
+    
+    // MARK: - Private methods
     private func setupScreen() {
         if isEditMode, let tracker = editingTracker {
             editingModeSetup(tracker)
@@ -144,9 +165,7 @@ final class CreateTrackerViewController: UIViewController {
         submitButton.setTitle(submitButtonTitle, for: .normal)
         
         completedCountLabel.isHidden = false
-        
         textField.textField.text = tracker.name
-        
         parameterSectionView.categoryRow.updateDescription(selectedCategory)
         
         let timetableDescription = selectedWeekdays.formatWeekdays()
@@ -161,6 +180,7 @@ final class CreateTrackerViewController: UIViewController {
         }) {
             selectedColorIndexPath = IndexPath(item: colorIndex, section: 1)
         }
+        checkFormValidation()
     }
     
     private func creationModeSetup() {
@@ -203,11 +223,9 @@ final class CreateTrackerViewController: UIViewController {
         buttonsStackView.addArrangedSubview(submitButton)
         
         NSLayoutConstraint.activate([
-            completedCountLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
             completedCountLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             completedCountLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
-            textField.topAnchor.constraint(equalTo: completedCountLabel.bottomAnchor, constant: 40),
             textField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             textField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             textField.heightAnchor.constraint(equalToConstant: 75),
@@ -226,24 +244,41 @@ final class CreateTrackerViewController: UIViewController {
             buttonsStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             buttonsStackView.heightAnchor.constraint(equalToConstant: 60)
         ])
+        
+        completedCountLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24).isActive = isEditMode
+        
+        textField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24).isActive = !isEditMode
+        textField.topAnchor.constraint(equalTo: completedCountLabel.bottomAnchor, constant: 40).isActive = isEditMode
+    }
+    
+    private func setupTextField() {
+        let textChangedAction = UIAction { [weak self] _ in
+            guard let self else { return }
+            checkFormValidation()
+        }
+        
+        textField.textField.addAction(textChangedAction, for: .editingChanged)
     }
     
     private func setupButtons() {
-        let cancelAction = UIAction { [weak self] _ in
-            guard let self else { return }
-            dismiss(animated: true)
+        cancelButton.addAction(UIAction { [weak self] _ in
+            self?.dismiss(animated: true)
+        }, for: .touchUpInside)
+        
+        submitButton.addAction(UIAction { [weak self] _ in
+            self?.didTapSubmit()
+        }, for: .touchUpInside)
+        
+        submitButton.configurationUpdateHandler = { button in
+            guard var config = button.configuration else { return }
+            
+            config.background.backgroundColor = button.state == .disabled ? .YPColors.gray : .black
+            button.configuration = config
         }
-        let submitAction = UIAction { [weak self] _ in
-            guard let self else { return }
-            didTapSubmit()
-        }
-        cancelButton.addAction(cancelAction, for: .touchUpInside)
-        submitButton.addAction(submitAction, for: .touchUpInside)
     }
     
     private func didTapSubmit() {
         guard
-            validateTextField(),
             !selectedCategory.isEmpty,
             !selectedWeekdays.isEmpty,
             let emojiIndex = selectedEmojiIndexPath,
@@ -271,23 +306,13 @@ final class CreateTrackerViewController: UIViewController {
         
         dismiss(animated: true)
     }
-    
-    private func validateTextField() -> Bool {
-        guard let text = textField.textField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !text.isEmpty else {
-            let description = NSLocalizedString("create_tracker_text_field_error_description", comment: "Text Field error description")
-            textField.updateErrorLabel(description: description, isHidden: false)
-            return false
-        }
-        
-        textField.updateErrorLabel(description: "", isHidden: true)
-        return true
-    }
 }
 
 extension CreateTrackerViewController: CategoryListViewControllerDelegate {
     func didSelectCategory(_ categoryName: String) {
         selectedCategory = categoryName
         parameterSectionView.categoryRow.updateDescription(categoryName)
+        checkFormValidation()
     }
 }
 
@@ -297,5 +322,6 @@ extension CreateTrackerViewController: TimetableViewControllerDelegate {
         selectedWeekdays = weekdays
         let timetableDescription = selectedWeekdays.formatWeekdays()
         parameterSectionView.timetableRow.updateDescription(timetableDescription)
+        checkFormValidation()
     }
 }

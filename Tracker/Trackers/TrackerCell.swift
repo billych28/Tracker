@@ -161,7 +161,7 @@ final class TrackerCell: UICollectionViewCell {
     
     private static func getCompletedDaysFormatted(count: Int) -> String {
         String.localizedStringWithFormat(
-            NSLocalizedString("trackers_cell_days_count", comment: "Number of completed days"),
+            NSLocalizedString("tracker_cell_days_count", comment: "Number of completed days"),
             count
         )
     }

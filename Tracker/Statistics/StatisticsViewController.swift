@@ -72,14 +72,10 @@ final class StatisticsViewController: UIViewController {
     
     private func updateStatistics() {
         let stats = dataProvider.fetchStatistics()
-        
-        if stats.completedTrackersCount == 0 {
-            stackView.isHidden = true
-            emptyView.isHidden = false
-        } else {
-            stackView.isHidden = false
-            emptyView.isHidden = true
-            
+        let isEmpty: Bool = stats.completedTrackersCount == 0
+        stackView.isHidden = isEmpty
+        emptyView.isHidden = !isEmpty
+        if !isEmpty {
             bestPeriodCard.setValue(stats.bestPeriod)
             perfectDaysCard.setValue(stats.perfectDays)
             completedCard.setValue(stats.completedTrackersCount)

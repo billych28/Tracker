@@ -29,7 +29,7 @@ extension CategoriesViewController: UITableViewDelegate {
     }
     
     private func getContextMenu(for categoryTitle: String, at indexPath: IndexPath) -> UIMenu {
-        let editActionTitle = NSLocalizedString("categories_edit_action_title", comment: "Edit category action title")
+        let editActionTitle = NSLocalizedString("edit_action_title", comment: "Edit category action title")
         let editAction = UIAction(title: editActionTitle) { _ in
             let editCategoryVC = CreateCategoryViewController()
             editCategoryVC.title = NSLocalizedString("edit_category_title", comment: "Title for edit category screen")
@@ -44,7 +44,7 @@ extension CategoriesViewController: UITableViewDelegate {
             self.present(navController, animated: true)
         }
         
-        let deleteActionTitle = NSLocalizedString("categories_delete_action_title", comment: "Delete category action title")
+        let deleteActionTitle = NSLocalizedString("delete_action_title", comment: "Delete category action title")
         let deleteAction = UIAction(title: deleteActionTitle, attributes: .destructive) { _ in
             let alertTitle = NSLocalizedString("categories_delete_alert_title", comment: "Delete alert title")
             let alert = UIAlertController(
@@ -58,7 +58,7 @@ extension CategoriesViewController: UITableViewDelegate {
                 deleteCategory(at: indexPath)
             }
             
-            let cancelActionTitle = NSLocalizedString("categories_delete_alert_cancel_title", comment: "Cancel action title")
+            let cancelActionTitle = NSLocalizedString("cancel_action_title", comment: "Cancel action title")
             let cancel = UIAlertAction(title: cancelActionTitle, style: .cancel)
             
             alert.addAction(confirmDelete)

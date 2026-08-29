@@ -8,7 +8,7 @@ import UIKit
 
 extension TrackersViewController: TrackerCellDelegate {
     func didTapOnComplete(on cell: TrackerCell) {
-        AnalyticsService.shared.report(event: "click", screen: "Main", item: "track")
+        AnalyticsService.shared.report(event: .click, screen: .main, item: "track")
         let currentDate = datePicker.date
         
         guard

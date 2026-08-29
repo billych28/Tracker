@@ -76,12 +76,12 @@ final class TrackersViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        AnalyticsService.shared.report(event: "open", screen: "Main")
+        AnalyticsService.shared.report(event: .open, screen: .main)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        AnalyticsService.shared.report(event: "close", screen: "Main")
+        AnalyticsService.shared.report(event: .close, screen: .main)
     }
     
     // MARK: - Public methods
@@ -172,7 +172,7 @@ final class TrackersViewController: UIViewController {
     }
     
     @objc private func handlePlusClick() {
-        AnalyticsService.shared.report(event: "click", screen: "Main", item: "add_track")
+        AnalyticsService.shared.report(event: .click, screen: .main, item: "add_track")
         let createTrackerVC = CreateTrackerViewController()
         createTrackerVC.delegate = self
         let navController = UINavigationController(rootViewController: createTrackerVC)
@@ -238,7 +238,7 @@ final class TrackersViewController: UIViewController {
         let action = UIAction { [weak self] _ in
             guard let self else { return }
             
-            AnalyticsService.shared.report(event: "click", screen: "Main", item: "filter")
+            AnalyticsService.shared.report(event: .click, screen: .main, item: "filter")
             presentFiltersViewController()
         }
         filtersButton.addAction(action, for: .touchUpInside)
