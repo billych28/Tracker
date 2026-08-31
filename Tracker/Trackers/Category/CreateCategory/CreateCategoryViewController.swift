@@ -12,7 +12,8 @@ final class CreateCategoryViewController: UIViewController {
     var onCategoryCreated: ((String) -> Void)?
     
     private let textField: TextFieldView = {
-        let textField = TextFieldView(frame: .zero, placeholder: "Введите название категории", limit: 38)
+        let placeholder = NSLocalizedString("create_category_name_placeholder", comment: "Placeholder for category name text field")
+        let textField = TextFieldView(frame: .zero, placeholder: placeholder, limit: 38)
         textField.textField.font = .systemFont(ofSize: 17, weight: .regular)
         textField.translatesAutoresizingMaskIntoConstraints = false
         
@@ -21,9 +22,9 @@ final class CreateCategoryViewController: UIViewController {
     
     private let doneButton: UIButton = {
         var config = UIButton.Configuration.filled()
-        config.title = "Готово"
-        config.baseBackgroundColor = UIColor(resource: .black)
-        config.baseForegroundColor = .white
+        config.title = NSLocalizedString("done_action_title", comment: "Create category button title")
+        config.baseBackgroundColor = .YPColors.black
+        config.baseForegroundColor = .YPColors.white
         
         let button = UIButton(configuration: config)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
@@ -37,8 +38,8 @@ final class CreateCategoryViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Новая категория"
-        view.backgroundColor = .systemBackground
+        title = NSLocalizedString("create_category_title", comment: "Title for create category screen")
+        view.backgroundColor = .YPColors.white
         
         setupUI()
         setupTextField()

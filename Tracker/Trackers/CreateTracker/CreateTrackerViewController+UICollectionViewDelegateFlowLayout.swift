@@ -24,7 +24,10 @@ extension CreateTrackerViewController: UICollectionViewDelegateFlowLayout {
         guard let currentSection = Section(rawValue: section) else { return CGSize(width: 0, height: 0) }
         let headerView = HeaderReusableView()
         
-        headerView.titleLabel.text = currentSection == .emoji ? "Emoji" : "Цвет"
+        let emojiSectionTitle = NSLocalizedString("create_tracker_emoji_section_title", comment: "Title for emoji section")
+        let colorSectionTitle = NSLocalizedString("create_tracker_color_section_title", comment: "Title for color section")
+        
+        headerView.titleLabel.text = currentSection == .emoji ? emojiSectionTitle : colorSectionTitle
         
         let targetSize = CGSize(width: collectionView.frame.width, height: UIView.layoutFittingExpandedSize.height)
         let estimatedSize = headerView.systemLayoutSizeFitting(

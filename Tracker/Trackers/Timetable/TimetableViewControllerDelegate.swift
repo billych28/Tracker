@@ -6,5 +6,5 @@
 //
 
 protocol TimetableViewControllerDelegate: AnyObject {
-    func dateSelected(_ picker: TimetableViewController, didSelectWeekdays weekdays: [Weekday])
+    func dateSelected(didSelectWeekdays weekdays: [Weekday])
 }

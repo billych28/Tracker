@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		281B56B6303FD7280013815D /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 281B56B5303FD7280013815D /* SnapshotTesting */; };
+		281B56E0304077670013815D /* AppMetricaCore in Frameworks */ = {isa = PBXBuildFile; productRef = 281B56DF304077670013815D /* AppMetricaCore */; };
 		28C5B3B630359DC800808DD3 /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = 28C5B3B530359DC800808DD3 /* Logging */; };
 /* End PBXBuildFile section */
 
@@ -69,6 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				281B56E0304077670013815D /* AppMetricaCore in Frameworks */,
 				28C5B3B630359DC800808DD3 /* Logging in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -77,6 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				281B56B6303FD7280013815D /* SnapshotTesting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,6 +143,7 @@
 			name = Tracker;
 			packageProductDependencies = (
 				28C5B3B530359DC800808DD3 /* Logging */,
+				281B56DF304077670013815D /* AppMetricaCore */,
 			);
 			productName = Tracker;
 			productReference = 28787EF73008CEBB0056CD52 /* Tracker.app */;
@@ -162,6 +167,7 @@
 			);
 			name = TrackerTests;
 			packageProductDependencies = (
+				281B56B5303FD7280013815D /* SnapshotTesting */,
 			);
 			productName = TrackerTests;
 			productReference = 28787F0D3008CEBC0056CD52 /* TrackerTests.xctest */;
@@ -219,11 +225,14 @@
 			knownRegions = (
 				en,
 				Base,
+				ru,
 			);
 			mainGroup = 28787EEE3008CEBB0056CD52;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				28C5B3B330359DB500808DD3 /* XCRemoteSwiftPackageReference "swift-log" */,
+				281B56B4303FD7280013815D /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
+				281B56DE304077670013815D /* XCRemoteSwiftPackageReference "appmetrica-sdk-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 28787EF83008CEBB0056CD52 /* Products */;
@@ -364,6 +373,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -427,6 +437,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -600,6 +611,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		281B56B4303FD7280013815D /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-snapshot-testing";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.19.4;
+			};
+		};
+		281B56DE304077670013815D /* XCRemoteSwiftPackageReference "appmetrica-sdk-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/appmetrica/appmetrica-sdk-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.6.0;
+			};
+		};
 		28C5B3B330359DB500808DD3 /* XCRemoteSwiftPackageReference "swift-log" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-log";
@@ -611,6 +638,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		281B56B5303FD7280013815D /* SnapshotTesting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 281B56B4303FD7280013815D /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = SnapshotTesting;
+		};
+		281B56DF304077670013815D /* AppMetricaCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 281B56DE304077670013815D /* XCRemoteSwiftPackageReference "appmetrica-sdk-ios" */;
+			productName = AppMetricaCore;
+		};
 		28C5B3B530359DC800808DD3 /* Logging */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 28C5B3B330359DB500808DD3 /* XCRemoteSwiftPackageReference "swift-log" */;

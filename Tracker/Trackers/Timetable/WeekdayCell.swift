@@ -17,6 +17,7 @@ final class WeekdayCell: UITableViewCell {
     }()
     private let toggle: UISwitch = {
         let toggle = UISwitch()
+        toggle.onTintColor = .YPColors.blue
         toggle.translatesAutoresizingMaskIntoConstraints = false
         return toggle
     }()
@@ -45,8 +46,7 @@ final class WeekdayCell: UITableViewCell {
     }
     
     private func setupView() {
-        backgroundColor = .systemBackground
-        
+        backgroundColor = .YPColors.background
         let stack = UIStackView(arrangedSubviews: [nameLabel, toggle])
         stack.axis = .horizontal
         stack.alignment = .center

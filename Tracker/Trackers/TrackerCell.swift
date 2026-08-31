@@ -17,7 +17,7 @@ final class TrackerCell: UICollectionViewCell {
         view.layer.cornerRadius = 16
         view.layer.masksToBounds = true
         view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor(resource: .border).cgColor
+        view.layer.borderColor = UIColor(resource: .YPColors.border).cgColor
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -50,7 +50,7 @@ final class TrackerCell: UICollectionViewCell {
     let countLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        label.text = "0 дней"
+        label.text = getCompletedDaysFormatted(count: 0)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -97,7 +97,7 @@ final class TrackerCell: UICollectionViewCell {
     
     func setIsCompleted(with count: Int, isCompleted: Bool) {
         guard var config = completeButton.configuration else { return }
-        countLabel.text = "\(count) дней"
+        countLabel.text = Self.getCompletedDaysFormatted(count: count)
         
         if isCompleted {
             completeButton.setImage(UIImage(resource: .doneIcon), for: .normal)
@@ -157,5 +157,12 @@ final class TrackerCell: UICollectionViewCell {
             delegate?.didTapOnComplete(on: self)
         }
         completeButton.addAction(action, for: .touchUpInside)
+    }
+    
+    private static func getCompletedDaysFormatted(count: Int) -> String {
+        String.localizedStringWithFormat(
+            NSLocalizedString("tracker_cell_days_count", comment: "Number of completed days"),
+            count
+        )
     }
 }

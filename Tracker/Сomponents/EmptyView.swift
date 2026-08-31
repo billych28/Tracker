@@ -18,8 +18,9 @@ final class EmptyView: UIView {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
+        let title = NSLocalizedString("trackers_empty_view_title", comment: "Empty view title")
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        label.text = "Что будем отслеживать?"
+        label.text = title
         label.numberOfLines = 2
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -35,6 +36,10 @@ final class EmptyView: UIView {
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         nil
+    }
+    
+    func setImage(with image: UIImage) {
+        imageView.image = image
     }
     
     func setTitle(to title: String) {

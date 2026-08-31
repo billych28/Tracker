@@ -82,7 +82,7 @@ final class CategoryAndTimetableView: UIView {
         let titleLabel = UILabel()
         titleLabel.text = title
         titleLabel.font = .systemFont(ofSize: 17, weight: .regular)
-        titleLabel.textColor = UIColor(resource: .black)
+        titleLabel.textColor = UIColor(resource: .YPColors.black)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let descriptionLabel = UILabel()

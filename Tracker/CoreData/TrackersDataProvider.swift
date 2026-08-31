@@ -13,18 +13,19 @@ final class TrackersDataProvider: NSObject {
     // MARK: - Public properties
     weak var delegate: TrackersDataProviderDelegate?
     
+    var visibleCategories: [TrackerCategory] = []
     var numberOfSections: Int {
         visibleCategories.count
     }
     
     // MARK: - Private properties
-    private let context: NSManagedObjectContext
-    private let trackerStore: TrackerStore
-    private let recordStore: TrackerRecordStore
-    private let categoryStore: TrackerCategoryStore
-    private var fetchedResultsController: NSFetchedResultsController<TrackerCoreData>!
-    private var currentSelectedWeekday: Weekday?
-    private var visibleCategories: [TrackerCategory] = []
+    private var currentFilter: TrackerFilter = .all
+    private(set) var trackerStore: TrackerStore
+    private(set) var recordStore: TrackerRecordStore
+    private(set) var categoryStore: TrackerCategoryStore
+    private(set) var fetchedResultsController: NSFetchedResultsController<TrackerCoreData>!
+    private(set) var currentSelectedWeekday: Weekday?
+    private(set) var context: NSManagedObjectContext
     
     init(context: NSManagedObjectContext) {
         self.context = context
@@ -36,20 +37,6 @@ final class TrackersDataProvider: NSObject {
         setupFetchedResultsController()
         setCurrentDate()
         rebuildVisibleCategories()
-    }
-    
-    func fetchAllCategories() -> [String] {
-        let request = TrackerCategoryCoreData.fetchRequest()
-        
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \TrackerCategoryCoreData.title, ascending: true)]
-        
-        do {
-            let categoriesCoreData = try context.fetch(request)
-            return categoriesCoreData.compactMap { $0.title }
-        } catch {
-            AppDelegate.logger.error("Failed to fetch all categories from Core Data", metadata: ["view": "TrackersDataProvider", "error": "\(error)"])
-            return []
-        }
     }
     
     private func setupFetchedResultsController() {
@@ -71,145 +58,53 @@ final class TrackersDataProvider: NSObject {
         try? controller.performFetch()
     }
     
-    private func setCurrentDate() {
-        let weekdayComponent = Calendar.current.component(.weekday, from: Date())
-        self.currentSelectedWeekday = Weekday(rawValue: weekdayComponent)
-    }
-    
     // MARK: - Public methods
-    func numberOfItemsInSection(_ section: Int) -> Int {
-        guard section < visibleCategories.count else { return 0 }
-        return visibleCategories[section].trackers.count
-    }
-    
-    func categoryTitle(at section: Int) -> String {
-        guard section < visibleCategories.count else { return "" }
-        return visibleCategories[section].title
-    }
-    
-    func tracker(at indexPath: IndexPath) -> Tracker? {
-        guard indexPath.section < visibleCategories.count,
-              indexPath.row < visibleCategories[indexPath.section].trackers.count else {
-            return nil
+    func updateFilter(date: Date, searchText: String, filter: TrackerFilter? = nil) {
+        if let filter = filter {
+            self.currentFilter = filter
         }
-        return visibleCategories[indexPath.section].trackers[indexPath.row]
-    }
-    
-    func filterTrackers(by date: Date) {
-        let weekdayComponent = Calendar.current.component(.weekday, from: date)
-        guard let currentWeekday = Weekday(rawValue: weekdayComponent) else { return }
         
-        currentSelectedWeekday = currentWeekday
-        rebuildVisibleCategories()
-    }
-    
-    func addCategory(with title: String) {
-        let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmedTitle.isEmpty else { return }
+        let calendar = Calendar.current
+        let weekdayComponent = calendar.component(.weekday, from: date)
+        self.currentSelectedWeekday = Weekday(rawValue: weekdayComponent)
+        
+        var predicates: [NSPredicate] = []
+        
+        if !searchText.isEmpty {
+            predicates.append(NSPredicate(format: "name CONTAINS[cd] %@", searchText))
+        }
+        
+        let startOfDay = calendar.startOfDay(for: date)
+        let completedTrackerIDs = recordStore.fetchCompletedTrackersIDs(for: startOfDay)
+        
+        switch currentFilter {
+        case .all, .today:
+            break
+        case .completed:
+            predicates.append(NSPredicate(format: "id IN %@", completedTrackerIDs))
+        case .uncompleted:
+            predicates.append(NSPredicate(format: "NOT (id IN %@)", completedTrackerIDs))
+        }
+        
+        if predicates.isEmpty {
+            fetchedResultsController.fetchRequest.predicate = nil
+        } else {
+            fetchedResultsController.fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+        }
         
         do {
-            _ = try categoryStore.fetchOrCreateCategory(with: trimmedTitle)
+            try fetchedResultsController.performFetch()
+            rebuildVisibleCategories()
+            delegate?.dataProviderDidChangeContent()
         } catch {
-            AppDelegate.logger.error("Couldn't add new empty category", metadata: ["view": "TrackersDataProvider", "error": "\(error)"])
-        }
-    }
-    
-    func add(newTracker: Tracker, toCategoryTitle title: String) {
-        do {
-            let categoryCoreData = try categoryStore.fetchOrCreateCategory(with: title)
-            _ = try trackerStore.createTracker(from: newTracker, in: categoryCoreData)
-        } catch {
-            AppDelegate.logger.error("Couldn't add new tracker to category \(title)", metadata: ["view": "TrackersDataProvider", "error": "\(error)"])
-        }
-    }
-    
-    func toggleCompletion(for tracker: Tracker, on date: Date) {
-        let request = TrackerCoreData.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %@", tracker.id as CVarArg)
-        
-        guard let trackerCoreData = try? context.fetch(request).first else { return }
-        let records = trackerCoreData.records as? Set<TrackerRecordCoreData> ?? []
-        let isCompleted = records.contains { Calendar.current.isDate($0.date ?? Date(), inSameDayAs: date) }
-        
-        do {
-            let record = TrackerRecord(id: tracker.id, date: date)
-            if isCompleted {
-                try recordStore.remove(record)
-            } else {
-                try recordStore.add(record, to: trackerCoreData)
-            }
-            
-            context.refresh(trackerCoreData, mergeChanges: true)
-            
-        } catch {
-            AppDelegate.logger.error("Couldn't toggle tracker completion status", metadata: ["view": "TrackersDataProvider", "error": "\(error)"])
-        }
-    }
-    
-    func completionDetails(for tracker: Tracker, on date: Date) -> (count: Int, isCompleted: Bool) {
-        let request = TrackerCoreData.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %@", tracker.id as CVarArg)
-        
-        guard let trackerCoreData = try? context.fetch(request).first else { return (0, false) }
-        let records = trackerCoreData.records as? Set<TrackerRecordCoreData> ?? []
-        
-        let count = records.count
-        let isCompleted = records.contains { record in
-            guard let recordDate = record.date else { return false }
-            return Calendar.current.isDate(recordDate, inSameDayAs: date)
-        }
-        
-        return (count, isCompleted)
-    }
-    
-    func updateCategory(oldTitle: String, newTitle: String) {
-        do {
-            try categoryStore.updateCategory(from: oldTitle, to: newTitle)
-        } catch {
-            AppDelegate.logger.error("Couldn't update tracker category", metadata: ["view": "TrackersDataProvider", "error": "\(error)"])
-        }
-    }
-    
-    func deleteCategory(with title: String) {
-        do {
-            try categoryStore.deleteCategory(with: title)
-        } catch {
-            AppDelegate.logger.error("Couldn't delete tracker category", metadata: ["view": "TrackersDataProvider", "error": "\(error)"])
+            AppDelegate.logger.error("Failed to fetch filtered trackers", metadata: ["error": "\(error)"])
         }
     }
     
     // MARK: - Private methods
-    private func rebuildVisibleCategories() {
-        guard
-            let sections = fetchedResultsController.sections,
-            let currentWeekday = currentSelectedWeekday
-        else {
-            visibleCategories = []
-            return
-        }
-        
-        visibleCategories = sections.compactMap { section in
-            let trackersCoreData = section.objects as? [TrackerCoreData] ?? []
-            
-            let filteredTrackers = trackersCoreData.compactMap { coreDataObj -> Tracker? in
-                guard
-                    let id = coreDataObj.id,
-                    let name = coreDataObj.name
-                else {
-                    return nil
-                }
-                
-                let timetable = coreDataObj.timetable as? [Weekday] ?? []
-                
-                guard timetable.contains(currentWeekday) else { return nil }
-                
-                let color = UIColorMarshalling.color(from: coreDataObj.colorHex ?? "#FFFFFF")
-                return Tracker(id: id, name: name, emoji: coreDataObj.emoji ?? "👀", color: color, timetable: timetable)
-            }
-            
-            if filteredTrackers.isEmpty { return nil }
-            return TrackerCategory(title: section.name, trackers: filteredTrackers)
-        }
+    private func setCurrentDate() {
+        let weekdayComponent = Calendar.current.component(.weekday, from: Date())
+        self.currentSelectedWeekday = Weekday(rawValue: weekdayComponent)
     }
 }
 

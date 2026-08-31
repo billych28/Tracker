@@ -32,16 +32,18 @@ final class CategoriesViewController: UIViewController {
     
     private var emptyView: EmptyView = {
         let view = EmptyView(frame: .zero)
-        view.setTitle(to: "Привычки и события можно\nобъединить по смыслу")
+        let title = NSLocalizedString("categories_empty_state_title", comment: "Title for empty view in category screen")
+        view.setTitle(to: title)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
     private let addCategoryButton: UIButton = {
         var config = UIButton.Configuration.filled()
-        config.title = "Добавить категорию"
-        config.baseBackgroundColor = UIColor(resource: .black)
-        config.baseForegroundColor = .white
+        let title = NSLocalizedString("categories_add_button_title", comment: "Create category add button title")
+        config.title = title
+        config.baseBackgroundColor = .YPColors.black
+        config.baseForegroundColor = .YPColors.white
         
         let button = UIButton(configuration: config)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
@@ -65,8 +67,8 @@ final class CategoriesViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Категория"
-        view.backgroundColor = .systemBackground
+        title = NSLocalizedString("categories_title", comment: "Categories screen title")
+        view.backgroundColor = .YPColors.white
         navigationItem.hidesBackButton = true
         
         setupUI()

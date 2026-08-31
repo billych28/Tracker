@@ -1,0 +1,57 @@
+// MARK: - Common strings
+"delete_action_title" = "Удалить";
+"cancel_action_title" = "Отменить";
+"edit_action_title" = "Редактировать";
+"done_action_title" = "Готово";
+
+// MARK: - Empty state titles
+"trackers_empty_state_title" = "Что будем отслеживать?";
+"trackers_search_empty_state_title" = "Ничего не найдено";
+"categories_empty_state_title" = "Привычки и события можно\nобъединить по смыслу";
+"statistics_empty_state_title" = "Анализировать пока нечего";
+
+// MARK: - Onboarding
+"onboarding_first_page_title" = "Отслеживайте только то, что хотите";
+"onboarding_second_page_title" = "Даже если это не литры воды и йога";
+"onboarding_button_title" = "Вот это технологии!";
+
+// MARK: - NavBar titles
+"trackers_title" = "Трекеры";
+"statistics_title" = "Статистика";
+"create_tracker_title" = "Новая привычка";
+"create_category_title" = "Новая категория";
+"categories_title" = "Категория";
+"edit_tracker_title" = "Редактирование привычки";
+"edit_category_title" = "Редактирование категории";
+"timetable_title" = "Расписание";
+
+// MARK: - Trackers
+"trackers_search_placeholder" = "Поиск";
+"trackers_delete_alert_title" = "Уверены что хотите удалить трекер?";
+"filters_button_title" = "Фильтры";
+
+// MARK: - Tracker filters
+"filter_all_title" = "Все трекеры";
+"filter_today_title" = "Трекеры на сегодня";
+"filter_completed_title" = "Завершенные";
+"filter_uncompleted_title" = "Не завершенные";
+
+// MARK: - Create tracker
+"create_tracker_name_placeholder" = "Введите название трекера";
+"create_tracker_emoji_section_title" = "Эмодзи";
+"create_tracker_color_section_title" = "Цвет";
+"create_tracker_button_title" = "Создать";
+"edit_tracker_save_button_title" = "Сохранить";
+
+// MARK: - Categories
+"categories_add_button_title" = "Добавить категорию";
+"categories_delete_alert_title" = "Эта категория точно не нужна?";
+
+// MARK: - Create category
+"create_category_name_placeholder" = "Введите название категории";
+
+// MARK: - Statistics
+"statistics_best_period" = "Лучший период";
+"statistics_perfect_days" = "Идеальные дни";
+"statistics_total_completed" = "Трекеров завершено";
+"statistics_average" = "Среднее значение";
